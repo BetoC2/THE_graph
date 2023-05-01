@@ -1,30 +1,30 @@
 import java.util.ArrayList;
 
-public class Graph {
+public class Graph<E> {
 
-    private ArrayList<Vertex> vertices;
-    private boolean isWeighted, isDirected;
+    private ArrayList<Vertex<E>> vertices;
+    private final boolean isWeighted, isDirected;
 
     //CONSTRUCTORS
     public Graph(boolean isWeighted, boolean isDirected){
-        this.vertices = new ArrayList<Vertex>();
+        this.vertices = new ArrayList<>();
         this.isWeighted = isWeighted;
         this.isDirected = isDirected;
     }
 
     //METHODS
     //VERTEX
-    public Vertex addVertex(String data){
-        Vertex newVertex = new Vertex(data);
+    public Vertex<E> addVertex(E data){
+        Vertex<E> newVertex = new Vertex<>(data);
         this.vertices.add(newVertex);
         return newVertex;
     }
 
-    public void removeVertex(Vertex vertex){
+    public void removeVertex(Vertex<E> vertex){
         this.vertices.remove(vertex);
     }
     //EDGE
-    public void addEdge(Vertex vertex1, Vertex vertex2, Double weight){
+    public void addEdge(Vertex<E> vertex1, Vertex<E> vertex2, Double weight){
         if(!this.isWeighted){
             weight = null;
         }
@@ -33,17 +33,17 @@ public class Graph {
         if(!this.isDirected) vertex2.addEdge(vertex1,weight); //Considering that graph isn´t directed, it establishes a way back through an edge
     }
 
-    public void removeEdge(Vertex vertex1, Vertex vertex2){
+    public void removeEdge(Vertex<E> vertex1, Vertex<E> vertex2){
         vertex1.removeEdge(vertex2);
         if(!this.isDirected) vertex2.removeEdge(vertex1);
     }
 
     //GETTERS
-    public ArrayList<Vertex> getVertices(){
+    public ArrayList<Vertex<E>> getVertices(){
         return this.vertices;
     }
-    public Vertex getVertexByValue(String value){
-        for(Vertex vertex:this.vertices){
+    public Vertex<E> getVertexByValue(String value){
+        for(Vertex<E> vertex:this.vertices){
             if(vertex.getData() == value){
                 return vertex;
             }
@@ -59,8 +59,9 @@ public class Graph {
         return this.isDirected;
     }
 
+    // todo: Lo del toString x2
     public void print(){
-        for(Vertex vertex:this.vertices){
+        for(Vertex<E> vertex:this.vertices){
             vertex.print(isWeighted);
         }
     }
