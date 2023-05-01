@@ -11,13 +11,10 @@ public class Edge {
     }
 
     //GETTERS
-    public Vertex getStartVertex(){
-        return this.startVertex;
-    }
+    public Vertex getStartVertex() {return this.startVertex;}
+    public Vertex getEndVertex() {return this.endVertex;}
+    public Double getWeight() {return this.weight;}
 
-    public Vertex getEndVertex(){
-        return this.endVertex;
-    }
 
 
 }
