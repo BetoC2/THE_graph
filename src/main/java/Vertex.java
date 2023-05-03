@@ -54,7 +54,7 @@ public class Vertex<E> {
 
 
 
-    //todo: Miguel, has el toString(boolean showWeight)
+    //todo: Saúl, haz el toString(boolean showWeight)
     public void print(boolean showWeight){
         String message = "";
         if(this.edges.size() == 0){
