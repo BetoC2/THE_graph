@@ -59,12 +59,20 @@ public class Graph<E> {
         return this.isDirected;
     }
 
-    // todo: Lo del toString x2
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for (Vertex<E> vertice: vertices) {
+            str.append(vertice);
+        }
+        return str.toString();
+    }
+
+    // Función print() deprecated
     public void print(){
         for(Vertex<E> vertex:this.vertices){
             vertex.print(isWeighted);
         }
     }
-
 
 }

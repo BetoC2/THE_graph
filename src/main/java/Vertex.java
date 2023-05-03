@@ -31,7 +31,30 @@ public class Vertex<E> {
         return this.edges;
     }
 
-    //todo: Considerar cambiar esto a toString
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        if (this.edges.size() == 0)
+            return this.data + " --> \n";
+
+        for (int i = 0; i < this.edges.size(); i++) {
+            Edge edge = this.edges.get(i);
+            if (i == 0) {
+                str.append(edge.getStartVertex().data);
+                str.append(" --> ");
+            }
+            str.append(edge.getEndVertex().data);
+            str.append(String.format(" (%f)",edge.getWeight()));
+            if (i < this.edges.size() - 1)
+                str.append(", ");
+        }
+        str.append("\n");
+        return str.toString();
+    }
+
+
+
+    //todo: Miguel, has el toString(boolean showWeight)
     public void print(boolean showWeight){
         String message = "";
         if(this.edges.size() == 0){
