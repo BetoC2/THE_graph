@@ -1,78 +1,22 @@
-import java.util.ArrayList;
+public abstract class Graph<E> {
+    boolean isWeighted;
 
-public class Graph<E> {
-
-    private ArrayList<Vertex<E>> vertices;
-    private final boolean isWeighted, isDirected;
-
-    //CONSTRUCTORS
-    public Graph(boolean isWeighted, boolean isDirected){
-        this.vertices = new ArrayList<>();
+    Graph(boolean isWeighted) {
         this.isWeighted = isWeighted;
-        this.isDirected = isDirected;
     }
 
-    //METHODS
-    //VERTEX
-    public Vertex<E> addVertex(E data){
-        Vertex<E> newVertex = new Vertex<>(data);
-        this.vertices.add(newVertex);
-        return newVertex;
-    }
-
-    public void removeVertex(Vertex<E> vertex){
-        this.vertices.remove(vertex);
-    }
-    //EDGE
-    public void addEdge(Vertex<E> vertex1, Vertex<E> vertex2, Double weight){
-        if(!this.isWeighted){
-            weight = null;
-        }
-        //Adds edge to first vertex(Direction)
-        vertex1.addEdge(vertex2, weight);
-        if(!this.isDirected) vertex2.addEdge(vertex1,weight); //Considering that graph isn´t directed, it establishes a way back through an edge
-    }
-
-    public void removeEdge(Vertex<E> vertex1, Vertex<E> vertex2){
-        vertex1.removeEdge(vertex2);
-        if(!this.isDirected) vertex2.removeEdge(vertex1);
-    }
-
-    //GETTERS
-    public ArrayList<Vertex<E>> getVertices(){
-        return this.vertices;
-    }
-    public Vertex<E> getVertexByValue(String value){
-        for(Vertex<E> vertex:this.vertices){
-            if(vertex.getData() == value){
-                return vertex;
-            }
-        }
-        return null; //Considerar excepción en este caso
-    }
-
-    public boolean isWeighted(){
-        return this.isWeighted;
-    }
-
-    public boolean isDirected(){
-        return this.isDirected;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        for (Vertex<E> vertice: vertices) {
-            str.append(vertice);
-        }
-        return str.toString();
-    }
-
-    // Función print() deprecated
-    public void print(){
-        for(Vertex<E> vertex:this.vertices){
-            vertex.print(isWeighted);
-        }
-    }
-
+    public abstract boolean addVertex(E obj);
+    public abstract boolean addEdge(E src, E dest);
+    public abstract boolean addEdge(E src, E dest, double weight);
+    public abstract boolean addArc (E src, E dest);
+    public abstract boolean addArc (E src, E dest, double weight);
+    public abstract int vertexCount();
+    // public abstract int edgeCount();
+    public abstract boolean removeVertex(E obj);
+    public abstract boolean removeArc (E src, E dest);
+    public abstract boolean removeEdge(E src, E dest);
+    public abstract boolean updateArc (E src, E dest, double weight);
+    public abstract boolean updateEdge(E src, E dest, double weight);
+    public abstract double  getArcWeight (E src, E dest);
+    public abstract double  getEdgeWeight(E src, E dest);
 }
