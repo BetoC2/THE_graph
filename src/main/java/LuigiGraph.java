@@ -33,14 +33,14 @@ public class LuigiGraph<E> extends Graph<E>{
 
     @Override
     public boolean addVertex(E vtx) {
+        // TODO: Manejar caso si el vertice ya existe (Si dejar así o añadir excepción
         if (vertexMap.get(vtx) != null)
             return false;
         vertexMap.put(vtx, new Vertex(vtx));
         return true;
     }
 
-// TODO: Comprimir estas funciones en 2, utilizando auxiliar tipo
-//  return addEdge(src, dest, null);
+// TODO: En todas estas funciones, addEdge y addArc, se necesita comprobar si la unión existe, de no existir añadir excepción
 
     @Override
     public boolean addEdge(E src, E dest) {
@@ -115,31 +115,60 @@ public class LuigiGraph<E> extends Graph<E>{
 
     @Override
     public boolean removeArc(E src, E dest) {
-        return false;
+        // TODO: Añadir excepción si alguno de los vertices tiene valor nulo
+        Vertex srcV = this.vertexMap.get(src);
+        return srcV.neighbours.removeIf(pair -> pair.v.key.equals(dest));
     }
 
     @Override
     public boolean removeEdge(E src, E dest) {
-        return false;
+        // TODO: Añadir excepción si alguno de los vertices tiene valor nulo
+        return removeArc(src, dest) && removeArc(dest, src);
     }
 
     @Override
     public boolean updateArc(E src, E dest, double weight) {
+        // TODO: Añadir excepción si alguno de los vertices tiene valor nulo
+        Vertex srcV = this.vertexMap.get(src);
+        for (Pair pair: srcV.neighbours){
+            if (pair.v.key.equals(dest)){
+                pair.weight = weight;
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean updateEdge(E src, E dest, double weight) {
-        return false;
+        return updateArc(src, dest, weight) && updateArc(dest, src, weight);
     }
 
     @Override
     public double getArcWeight(E src, E dest) {
-        return 0;
+        Vertex srcV = this.vertexMap.get(src);
+        for (Pair pair: srcV.neighbours){
+            if (pair.v.key.equals(dest))
+                return pair.weight;
+        }
+        // TODO: Si se llegó a esta parte, es porque no existe el arc, lanzar excepción
+        throw new NullPointerException();
     }
 
     @Override
     public double getEdgeWeight(E src, E dest) {
-        return 0;
+        // TODO: Manejar excepción si algún argumento es null
+        return getArcWeight(src, dest);
+    }
+
+    // Función auxiliar por si se necesita
+    private boolean arcExists(E src, E dest){
+        Vertex srcV = this.vertexMap.get(src);
+        for (Pair pair: srcV.neighbours){
+            if (pair.v.key.equals(dest)){
+                return true;
+            }
+        }
+        return false;
     }
 }
