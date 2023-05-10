@@ -1,7 +1,7 @@
 
 public class TestGraph {
     public static void main(String[] args) {
-        Graph<String> busNetwork = new Graph<>(true,true);
+        /*Graph<String> busNetwork = new Graph<>(true,true);
         Vertex<String> lopezStation = busNetwork.addVertex("Lopez Mateos");
         Vertex<String> laNormalStation = busNetwork.addVertex("La Normal");
         Vertex<String> periSurStation = busNetwork.addVertex("Periférico sur");
@@ -20,6 +20,6 @@ public class TestGraph {
 
         busNetwork.removeVertex(laNormalStation);
         System.out.print("\nSe supone que se eliminó el vértice laNormalStation\n\n");
-        System.out.println(busNetwork);
+        System.out.println(busNetwork);*/
     }
 }

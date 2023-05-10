@@ -1,3 +1,5 @@
+import exceptions.NullObjectReceivedException;
+
 public abstract class Graph<E> {
     boolean isWeighted;
 
@@ -6,7 +8,7 @@ public abstract class Graph<E> {
     }
 
     public abstract boolean addVertex(E obj);
-    public abstract boolean addEdge(E src, E dest);
+    public abstract boolean addEdge(E src, E dest) throws NullObjectReceivedException;
     public abstract boolean addEdge(E src, E dest, double weight);
     public abstract boolean addArc (E src, E dest);
     public abstract boolean addArc (E src, E dest, double weight);

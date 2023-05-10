@@ -1,3 +1,5 @@
+import exceptions.NullObjectReceivedException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,13 +45,15 @@ public class LuigiGraph<E> extends Graph<E>{
 // TODO: En todas estas funciones, addEdge y addArc, se necesita comprobar si la unión existe, de no existir añadir excepción
 
     @Override
-    public boolean addEdge(E src, E dest) {
+    public boolean addEdge(E src, E dest) throws NullObjectReceivedException {
         // TODO: Posible excepción si el grafo es ponderado o si nos dan null
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
-        if (srcV == null || destV == null)
-            return false;
+        if (srcV == null || destV == null){
+            throw new NullObjectReceivedException(src);
+        }
+
 
         srcV.neighbours.add(new Pair(destV, null));
         destV.neighbours.add(new Pair(srcV, null));
