@@ -11,18 +11,10 @@ public class TestGraph {
         System.out.println(intGraph.addEdge(15, 58)); // return true
         System.out.println(intGraph.addArc ( 7, 15)); // return true
         System.out.println(intGraph.addArc ( 7, 58)); // return true
-        try {
-            System.out.println(intGraph.addEdge(15, 58, 3.6)); // return true
-        }
-        catch (WrongGraphMethodException Ex) {
-            System.out.println(Ex);
-        }
-        try {
-            System.out.println(intGraph.addArc(7, 15, 2.6)); // return true
-        }
-        catch (WrongGraphMethodException Ex) {
-            System.out.println(Ex);
-        }
+
+        System.out.println(intGraph.addEdge(15, 58, 3.6)); // return false
+        System.out.println(intGraph.addArc(7, 15, 2.6)); // return false
+
         System.out.println(intGraph.addEdge(15, 10)); // return false
         System.out.println(intGraph.addEdge(15, 58)); // return false
 
