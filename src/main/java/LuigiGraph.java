@@ -45,17 +45,17 @@ public class LuigiGraph<E> extends Graph<E>{
 
 
     @Override
-    public boolean addEdge(E src, E dest) throws WrongGraphMethodException {
+    public boolean addEdge(E src, E dest){
         if (this.isWeighted)
-            throw new WrongGraphMethodException(true);
+            return false;
         return addEdgeHelper(src, dest, null);
     }
 
 
     @Override
-    public boolean addEdge(E src, E dest, double weight) throws WrongGraphMethodException{
+    public boolean addEdge(E src, E dest, double weight){
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(false);
+            return false;
         return addEdgeHelper(src, dest, weight);
     }
 
@@ -105,16 +105,16 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     @Override
-    public boolean addArc(E src, E dest) throws WrongGraphMethodException {
+    public boolean addArc(E src, E dest){
         if (this.isWeighted)
-            throw new WrongGraphMethodException(true);
+            return false;
          return addArcHelper(src, dest, null);
     }
 
     @Override
-    public boolean addArc(E src, E dest, double weight) throws WrongGraphMethodException{
+    public boolean addArc(E src, E dest, double weight) {
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(false);
+            return false;
         return addArcHelper(src, dest, weight);
     }
 
@@ -163,9 +163,9 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     @Override
-    public boolean updateArc(E src, E dest, double weight) throws WrongGraphMethodException{
+    public boolean updateArc(E src, E dest, double weight) {
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(false);
+            return false;
 
         if (src == null || dest == null)
             return false;
@@ -181,7 +181,7 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     @Override
-    public boolean updateEdge(E src, E dest, double weight) throws WrongGraphMethodException {
+    public boolean updateEdge(E src, E dest, double weight) {
         if (arcExists(src, dest) && arcExists(dest, src))
             return updateArc(src, dest, weight) && updateArc(dest, src, weight);
         return false;
