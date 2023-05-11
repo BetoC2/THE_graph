@@ -2,19 +2,24 @@ import java.net.DatagramPacket;
 import java.util.ArrayList;
 
 public class MarioGraph<E> extends Graph<E>{
-    private boolean[][] adjBoolMatrix; //Boolean Adjancecy Matrix
+    private Boolean[][] adjBoolMatrix; //Boolean Adjancecy Matrix
     private Double[][] adjWeightMatrix; //Double Adjancecy Matrix
     private ArrayList<E> vertices;
 
     MarioGraph(int numVrx,boolean isWeighted){
         super(isWeighted);
-        if (!isWeighted)
-            this.adjBoolMatrix = new boolean[numVrx][numVrx]; //numVrx = Number of Vertex
-
+        if (!isWeighted) {
+            this.adjBoolMatrix = new Boolean[numVrx][numVrx];
+            for (int i = 0; i < adjBoolMatrix.length; i++){
+                for(int j = 0; j < adjBoolMatrix.length; j++){
+                    adjBoolMatrix[i][j] = false;
+                }
+            }//numVrx = Number of Vertex
+        }
         if(isWeighted)
             this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
-
         this.vertices = new ArrayList<>();
+
     }
 
     @Override
@@ -31,6 +36,7 @@ public class MarioGraph<E> extends Graph<E>{
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
+        // TODO: Regresar falso si alguno es -1
         if(!adjBoolMatrix[ind1][ind2] && !adjBoolMatrix[ind2][ind1]){
             adjBoolMatrix[ind1][ind2] = true;
             adjBoolMatrix[ind2][ind1] = true;
@@ -41,6 +47,7 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addEdge(E index1, E index2, double weight) {
+        // TODO: regresar falso si es no ponderado
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
@@ -84,48 +91,47 @@ public class MarioGraph<E> extends Graph<E>{
         return this.vertices.size();
     }
 
+    private void swapVertical(Object[][] matrix,int indObj, int lenght){
+        for(int i = 0; i < lenght; i++){
+            for(int j = indObj; j < lenght - 1; j++){
+                matrix[i][j] = matrix[i][j++];
+            }
+        }
+    }
+
+    private void swapHorizontal(Object[][] matrix,int indObj, int length){
+        for(int i = indObj; i < length - 1; i++){
+            for(int j = 0; j < length; j++){
+                matrix[i][j] = matrix[i][j++];
+            }
+        }
+    }
+
+    private void fillNulls(Object[][] matrix, int length){
+        for(int i = 0; i < length; i++){
+            matrix[i][length-1] = null;
+        }
+        for(int i = 0; i < length; i++){
+            adjWeightMatrix[length][i] = null;
+        }
+    }
+
     @Override
     public boolean removeVertex(E vtx) {
         if(vertices.contains(vtx)){
-
             int ind = vertices.indexOf(vtx);
+            int length = vertices.size();
             if(super.isWeighted){
-                for(int i = 0; i < vertices.size(); i++){
-                    for(int j = ind; j < vertices.size() - 1; j++){
-                        adjWeightMatrix[i][j] = adjWeightMatrix[i][j++];
-                    }
-                }
-                for(int i = ind; i < vertices.size() - 1; i++){
-                    for(int j = 0; j < vertices.size(); j++){
-                        adjWeightMatrix[i][j] = adjWeightMatrix[i++][j];
-                    }
-                }
-                for(int i = 0; i < vertices.size(); i++){
-                    adjWeightMatrix[i][vertices.size() - 1] = null;
-                }
-                for(int i = 0; i < vertices.size(); i++){
-                    adjWeightMatrix[vertices.size() - 1][i] = null;
-                }
+                swapVertical(adjWeightMatrix,ind,length);
+                swapHorizontal(adjWeightMatrix,ind,length);
+                fillNulls(adjWeightMatrix,length);
                 vertices.remove(vtx);
                 return true;
             }
             if(!super.isWeighted){
-                for(int i = 0; i < vertices.size(); i++){
-                    for(int j = ind; j < vertices.size() - 1; j++){
-                        adjBoolMatrix[i][j] = adjBoolMatrix[i][j++];
-                    }
-                }
-                for(int i = ind; i < vertices.size() - 1; i++){
-                    for(int j = 0; j < vertices.size(); j++){
-                        adjBoolMatrix[i][j] = adjBoolMatrix[i++][j];
-                    }
-                }
-                for(int i = 0; i < vertices.size(); i++){
-                    adjBoolMatrix[i][vertices.size() - 1] = false;
-                }
-                for(int i = 0; i < vertices.size(); i++){
-                    adjBoolMatrix[vertices.size() - 1][i] = false;
-                }
+                swapVertical(adjBoolMatrix,ind,length);
+                swapHorizontal(adjBoolMatrix,ind,length);
+                fillNulls(adjBoolMatrix,length);
                 vertices.remove(vtx);
                 return true;
             }
@@ -214,6 +220,38 @@ public class MarioGraph<E> extends Graph<E>{
         if(adjWeightMatrix[ind1][ind2] > 0.0) return true;
         if(adjBoolMatrix[ind1][ind2]) return true;
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
+    public void print(){
+        System.out.print(" ");
+        for(E vertex : vertices){
+            System.out.print(vertex.toString() + " ");
+        }
+        System.out.println();
+
+        if(super.isWeighted){
+            for(int i = 0; i < adjWeightMatrix.length; i++){
+                System.out.print(vertices.get(i) + "  ");
+                for(int j = 0; j < adjWeightMatrix[i].length; j++){
+                    System.out.print(adjWeightMatrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+        if(!super.isWeighted){
+            for(int i = 0; i < adjBoolMatrix.length; i++){
+                System.out.print(vertices.get(i) + "  ");
+                for(int j = 0; j < adjBoolMatrix[i].length; j++){
+                    System.out.print(adjBoolMatrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
     }
 
 

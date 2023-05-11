@@ -211,8 +211,8 @@ public class LuigiGraph<E> extends Graph<E>{
         return null;
     }
 
-    public void DFS(E key){
-        Vertex startVertex = vertexMap.get(key);
+    public void DFS(E src){ //Find all vertexes from a origin Vertex that can be accessed
+        Vertex startVertex = vertexMap.get(src);
         for (Vertex v : vertexMap.values()) {
             v.visited = false;
         }
@@ -230,6 +230,10 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
+    public void BFS(E src, E dest){
+
+    }
+
     @Override
     public String toString(){
         StringBuilder st = new StringBuilder();
@@ -237,11 +241,12 @@ public class LuigiGraph<E> extends Graph<E>{
             st.append(vertex.key);
             st.append(": ");
             for(Pair pair: vertex.neighbours){
-                st.append(pair.v.key + ", ");
+                st.append(pair.v.key).append(", ");
+
             }
             st.append("\n");
 
         }
         return st.toString();
     }
-}
+} 
