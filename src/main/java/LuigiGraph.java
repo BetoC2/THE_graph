@@ -1,5 +1,4 @@
 import exceptions.NullObjectReceivedException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,30 +43,31 @@ public class LuigiGraph<E> extends Graph<E>{
 
 // TODO: En todas estas funciones, addEdge y addArc, se necesita comprobar si la unión existe, de no existir añadir excepción
 
+
     @Override
-    public boolean addEdge(E src, E dest) throws NullObjectReceivedException {
+    public boolean addEdge(E src, E dest) throws NullObjectReceivedException{
         // TODO: Posible excepción si el grafo es ponderado o si nos dan null
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
-        if (srcV == null || destV == null){
-            throw new NullObjectReceivedException(src);
-        }
-
+        if (srcV == null) throw new NullObjectReceivedException(src);
+        if(destV == null) throw new NullObjectReceivedException(dest);
 
         srcV.neighbours.add(new Pair(destV, null));
         destV.neighbours.add(new Pair(srcV, null));
         return true;
     }
 
+
+
+
     @Override
-    public boolean addEdge(E src, E dest, double weight) {
+    public boolean addEdge(E src, E dest, double weight){
         // TODO: Posible excepción si el grafo es no ponderado o si nos dan null
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
-        if (srcV == null || destV == null)
-            return false;
+        if (srcV == null || destV == null) return false;
 
         srcV.neighbours.add(new Pair(destV, weight));
         destV.neighbours.add(new Pair(srcV, weight));
@@ -80,8 +80,7 @@ public class LuigiGraph<E> extends Graph<E>{
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
-        if (srcV == null || destV == null)
-            return false;
+        if (srcV == null || destV == null) return false;
 
         srcV.neighbours.add(new Pair(destV, null));
         return true;
@@ -89,12 +88,11 @@ public class LuigiGraph<E> extends Graph<E>{
 
     @Override
     public boolean addArc(E src, E dest, double weight) {
-        // TODO: Posible excepción si el grafo es no ponderado o si nos dan null
+        // TODO: Codigo se repite en todos los adds, considerar otra opción
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
-        if (srcV == null || destV == null)
-            return false;
+        if (srcV == null || destV == null) return false;
 
         srcV.neighbours.add(new Pair(destV, weight));
         return true;
@@ -175,4 +173,12 @@ public class LuigiGraph<E> extends Graph<E>{
         }
         return false;
     }
+
+    public static <E> void dfs(Graph <E> graph) {
+    }
+
+
+
 }
+
+
