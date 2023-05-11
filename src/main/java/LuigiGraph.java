@@ -235,7 +235,11 @@ public class LuigiGraph<E> extends Graph<E>{
         for(Vertex vertex: vertexMap.values()){
             st.append(vertex.key);
             st.append(": ");
-            st.append(vertex.neighbours).append("\n");
+            for(Pair pair: vertex.neighbours){
+                st.append(pair.v.key + ", ");
+            }
+            st.append("\n");
+
         }
         return st.toString();
     }

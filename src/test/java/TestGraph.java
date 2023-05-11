@@ -10,6 +10,7 @@ public class TestGraph {
         System.out.println(intGraph.addVertex(7));   // returns false
         System.out.println(intGraph.addEdge(15, 58)); // return true
         System.out.println(intGraph.addArc ( 7, 15)); // return true
+        System.out.println(intGraph.addArc ( 7, 58)); // return true
         try {
             System.out.println(intGraph.addEdge(15, 58, 3.6)); // return true
         }
@@ -24,5 +25,7 @@ public class TestGraph {
         }
         System.out.println(intGraph.addEdge(15, 10)); // return false
         System.out.println(intGraph.addEdge(15, 58)); // return false
+
+        System.out.println(intGraph);
     }
 }
