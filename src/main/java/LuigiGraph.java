@@ -43,42 +43,23 @@ public class LuigiGraph<E> extends Graph<E>{
         return true;
     }
 
-// TODO: En todas estas funciones, addEdge y addArc, se necesita comprobar si la unión existe, de no existir añadir excepción
 
     @Override
     public boolean addEdge(E src, E dest) throws WrongGraphMethodException {
         if (this.isWeighted)
-            throw new WrongGraphMethodException(this.isWeighted);
-
-        Vertex srcV = vertexMap.get(src);
-        Vertex destV = vertexMap.get(dest);
-
-        if (srcV == null || destV == null)
-            return false;
-
-        boolean srcDestArc = arcExists(src, dest);
-        boolean destSrcArc = arcExists(dest, src);
-
-        if (srcDestArc && destSrcArc)
-            return false;
-
-        if (!srcDestArc && destSrcArc)
-            srcV.neighbours.add(new Pair(destV, null));
-        else if(srcDestArc && !destSrcArc)
-            destV.neighbours.add(new Pair(srcV, null));
-        else {
-            srcV.neighbours.add(new Pair(destV, null));
-            destV.neighbours.add(new Pair(srcV, null));
-        }
-        return true;
+            throw new WrongGraphMethodException(true);
+        return addEdgeHelper(src, dest, null);
     }
 
 
     @Override
     public boolean addEdge(E src, E dest, double weight) throws WrongGraphMethodException{
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(this.isWeighted);
+            throw new WrongGraphMethodException(false);
+        return addEdgeHelper(src, dest, weight);
+    }
 
+    private boolean addEdgeHelper(E src, E dest, Double weight){
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
@@ -91,10 +72,20 @@ public class LuigiGraph<E> extends Graph<E>{
         if (srcDestArc && destSrcArc)
             return false;
 
-        if (srcDestArc && !destSrcArc)
-            srcV.neighbours.add(new Pair(destV, weight));
-        else if(!srcDestArc && destSrcArc)
+        if (srcDestArc && !destSrcArc) {
             destV.neighbours.add(new Pair(srcV, weight));
+            for (Pair pair: srcV.neighbours){
+                if (pair.v.key.equals(dest))
+                    pair.weight = weight;
+            }
+        }
+        else if(!srcDestArc && destSrcArc) {
+            srcV.neighbours.add(new Pair(destV, weight));
+            for (Pair pair : destV.neighbours) {
+                if (pair.v.key.equals(dest))
+                    pair.weight = weight;
+            }
+        }
         else {
             srcV.neighbours.add(new Pair(destV, weight));
             destV.neighbours.add(new Pair(srcV, weight));
@@ -102,28 +93,32 @@ public class LuigiGraph<E> extends Graph<E>{
         return true;
     }
 
+    // Función auxiliar por si se necesita
+    private boolean arcExists(E src, E dest){
+        Vertex srcV = this.vertexMap.get(src);
+        for (Pair pair: srcV.neighbours){
+            if (pair.v.key.equals(dest)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean addArc(E src, E dest) throws WrongGraphMethodException {
         if (this.isWeighted)
-            throw new WrongGraphMethodException(this.isWeighted);
-
-        Vertex srcV = vertexMap.get(src);
-        Vertex destV = vertexMap.get(dest);
-
-        if (srcV == null || destV == null) return false;
-
-        if (arcExists(src, dest))
-            return false;
-
-        srcV.neighbours.add(new Pair(destV, null));
-        return true;
+            throw new WrongGraphMethodException(true);
+         return addArcHelper(src, dest, null);
     }
 
     @Override
     public boolean addArc(E src, E dest, double weight) throws WrongGraphMethodException{
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(this.isWeighted);
+            throw new WrongGraphMethodException(false);
+        return addArcHelper(src, dest, weight);
+    }
 
+    private boolean addArcHelper(E src, E dest, Double weight){
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
 
@@ -164,13 +159,13 @@ public class LuigiGraph<E> extends Graph<E>{
 
     @Override
     public boolean removeEdge(E src, E dest) {
-        return removeArc(src, dest) && removeArc(dest, src);
+        return removeArc(src, dest) || removeArc(dest, src);
     }
 
     @Override
     public boolean updateArc(E src, E dest, double weight) throws WrongGraphMethodException{
         if (!this.isWeighted)
-            throw new WrongGraphMethodException(this.isWeighted);
+            throw new WrongGraphMethodException(false);
 
         if (src == null || dest == null)
             return false;
@@ -187,37 +182,33 @@ public class LuigiGraph<E> extends Graph<E>{
 
     @Override
     public boolean updateEdge(E src, E dest, double weight) throws WrongGraphMethodException {
-        return updateArc(src, dest, weight) && updateArc(dest, src, weight);
+        if (arcExists(src, dest) && arcExists(dest, src))
+            return updateArc(src, dest, weight) && updateArc(dest, src, weight);
+        return false;
     }
 
     @Override
-    public double getArcWeight(E src, E dest) {
-
+    public Double getArcWeight(E src, E dest) throws NullObjectReceivedException{
+        if (src == null || dest == null)
+            throw new NullObjectReceivedException(src == null? "src": "dest");
 
         Vertex srcV = this.vertexMap.get(src);
         for (Pair pair: srcV.neighbours){
             if (pair.v.key.equals(dest))
                 return pair.weight;
         }
-        // TODO: Si se llegó a esta parte, es porque no existe el arc, lanzar excepción
-        throw new NullPointerException();
+        return null;
     }
 
     @Override
-    public double getEdgeWeight(E src, E dest) {
-        // TODO: Manejar excepción si algún argumento es null
-        return getArcWeight(src, dest);
-    }
+    public Double getEdgeWeight(E src, E dest) throws NullObjectReceivedException {
+        if (src == null || dest == null)
+            throw new NullObjectReceivedException(src == null? "src": "dest");
 
-    // Función auxiliar por si se necesita
-    private boolean arcExists(E src, E dest){
-        Vertex srcV = this.vertexMap.get(src);
-        for (Pair pair: srcV.neighbours){
-            if (pair.v.key.equals(dest)){
-                return true;
-            }
-        }
-        return false;
+        if (arcExists(src, dest) && arcExists(dest, src))
+            return getArcWeight(src, dest);
+
+        return null;
     }
 
     public void DFS(Vertex startVertex){
@@ -248,9 +239,4 @@ public class LuigiGraph<E> extends Graph<E>{
         }
         return st.toString();
     }
-
-
-
 }
-
-

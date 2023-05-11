@@ -2,9 +2,9 @@ package exceptions;
 
 public class NullObjectReceivedException extends Exception {
 
-    private final Object receivedObject;
+    private final String receivedObject;
 
-    public  NullObjectReceivedException(Object obj){
+    public  NullObjectReceivedException(String obj){
         super("NullObjectReceivedException");
         this.receivedObject = obj;
     }

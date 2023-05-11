@@ -1,3 +1,4 @@
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 
 public class MarioGraph<E> extends Graph<E>{
@@ -187,7 +188,7 @@ public class MarioGraph<E> extends Graph<E>{
     }
 
     @Override
-    public double getArcWeight(E index1, E index2) {
+    public Double getArcWeight(E index1, E index2) {
         if(index1.equals(index2))
             return 0.0;
         int ind1 = this.vertices.indexOf(index1);
@@ -196,7 +197,7 @@ public class MarioGraph<E> extends Graph<E>{
     }
 
     @Override
-    public double getEdgeWeight(E index1, E index2) {
+    public Double getEdgeWeight(E index1, E index2) {
         if(index1.equals(index2))
             return 0.0;
         int ind1 = this.vertices.indexOf(index1);

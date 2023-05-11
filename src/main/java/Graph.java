@@ -20,6 +20,6 @@ public abstract class Graph<E> {
     public abstract boolean removeEdge(E src, E dest);
     public abstract boolean updateArc (E src, E dest, double weight) throws WrongGraphMethodException;
     public abstract boolean updateEdge(E src, E dest, double weight) throws WrongGraphMethodException;
-    public abstract double  getArcWeight (E src, E dest) throws NullObjectReceivedException;
-    public abstract double  getEdgeWeight(E src, E dest) throws NullObjectReceivedException;
+    public abstract Double  getArcWeight (E src, E dest) throws NullObjectReceivedException;
+    public abstract Double  getEdgeWeight(E src, E dest) throws NullObjectReceivedException;
 }
