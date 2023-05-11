@@ -211,7 +211,8 @@ public class LuigiGraph<E> extends Graph<E>{
         return null;
     }
 
-    public void DFS(Vertex startVertex){
+    public void DFS(E key){
+        Vertex startVertex = vertexMap.get(key);
         for (Vertex v : vertexMap.values()) {
             v.visited = false;
         }

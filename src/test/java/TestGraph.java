@@ -19,5 +19,6 @@ public class TestGraph {
         System.out.println(intGraph.addEdge(15, 58)); // return false
 
         System.out.println(intGraph);
+        intGraph.DFS(7);
     }
 }
