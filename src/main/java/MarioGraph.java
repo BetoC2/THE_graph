@@ -2,27 +2,17 @@ import java.util.ArrayList;
 
 public class MarioGraph<E> extends Graph<E>{
     private boolean[][] adjBoolMatrix; //Boolean Adjancecy Matrix
-    private double[][] adjWeightMatrix; //Double Adjancecy Matrix
+    private Double[][] adjWeightMatrix; //Double Adjancecy Matrix
     private ArrayList<E> vertices;
 
     MarioGraph(int numVrx,boolean isWeighted){
         super(isWeighted);
-        if(!isWeighted) {
+        if (!isWeighted)
             this.adjBoolMatrix = new boolean[numVrx][numVrx]; //numVrx = Number of Vertex
-            for (int i = 0; i < numVrx; i++) {
-                for (int j = 0; j < numVrx; j++) {
-                    this.adjBoolMatrix[i][j] = false;
-                }
-            }
-        }
-        if(isWeighted){
-            this.adjWeightMatrix = new double[numVrx][numVrx]; //numVrx = Number of Vertex
-            for (int i = 0; i < numVrx; i++) {
-                for (int j = 0; j < numVrx; j++) {
-                    this.adjWeightMatrix[i][j] = 0.0;
-                }
-            }
-        }
+
+        if(isWeighted)
+            this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
+
         this.vertices = new ArrayList<>();
     }
 
@@ -91,6 +81,55 @@ public class MarioGraph<E> extends Graph<E>{
     @Override
     public int vertexCount() {
         return this.vertices.size();
+    }
+
+    @Override
+    public boolean removeVertex(E vtx) {
+        if(vertices.contains(vtx)){
+
+            int ind = vertices.indexOf(vtx);
+            if(super.isWeighted){
+                for(int i = 0; i < vertices.size(); i++){
+                    for(int j = ind; j < vertices.size() - 1; j++){
+                        adjWeightMatrix[i][j] = adjWeightMatrix[i][j++];
+                    }
+                }
+                for(int i = ind; i < vertices.size() - 1; i++){
+                    for(int j = 0; j < vertices.size(); j++){
+                        adjWeightMatrix[i][j] = adjWeightMatrix[i++][j];
+                    }
+                }
+                for(int i = 0; i < vertices.size(); i++){
+                    adjWeightMatrix[i][vertices.size() - 1] = null;
+                }
+                for(int i = 0; i < vertices.size(); i++){
+                    adjWeightMatrix[vertices.size() - 1][i] = null;
+                }
+                vertices.remove(vtx);
+                return true;
+            }
+            if(!super.isWeighted){
+                for(int i = 0; i < vertices.size(); i++){
+                    for(int j = ind; j < vertices.size() - 1; j++){
+                        adjBoolMatrix[i][j] = adjBoolMatrix[i][j++];
+                    }
+                }
+                for(int i = ind; i < vertices.size() - 1; i++){
+                    for(int j = 0; j < vertices.size(); j++){
+                        adjBoolMatrix[i][j] = adjBoolMatrix[i++][j];
+                    }
+                }
+                for(int i = 0; i < vertices.size(); i++){
+                    adjBoolMatrix[i][vertices.size() - 1] = false;
+                }
+                for(int i = 0; i < vertices.size(); i++){
+                    adjBoolMatrix[vertices.size() - 1][i] = false;
+                }
+                vertices.remove(vtx);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -175,5 +214,6 @@ public class MarioGraph<E> extends Graph<E>{
         if(adjBoolMatrix[ind1][ind2]) return true;
         return false;
     }
+
 
 }
