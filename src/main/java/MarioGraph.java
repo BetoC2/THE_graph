@@ -17,6 +17,7 @@ public class MarioGraph<E> extends Graph<E>{
             }//numVrx = Number of Vertex
         }
         if(isWeighted)
+            //TODO: poner valor 0 a los indices [x][x]
             this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
         this.vertices = new ArrayList<>();
 
@@ -46,7 +47,7 @@ public class MarioGraph<E> extends Graph<E>{
         if(ind1 == -1 || ind2 == -1){
             return false;
         }
-        if(!adjBoolMatrix[ind1][ind2] && !adjBoolMatrix[ind2][ind1]){
+        if(!adjBoolMatrix[ind1][ind2] || !adjBoolMatrix[ind2][ind1]){
             adjBoolMatrix[ind1][ind2] = true;
             adjBoolMatrix[ind2][ind1] = true;
             return true;
@@ -64,7 +65,8 @@ public class MarioGraph<E> extends Graph<E>{
         if(ind1 == -1 || ind2 == -1){
          return false;
         }
-        if((adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind1][ind2] == 0.0) && (adjWeightMatrix[ind2][ind1] == null || adjWeightMatrix[ind2][ind1] == 0.0)){
+        //TODO: Valor 0.0 es valido
+        if(adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind2][ind1] == null){
             adjWeightMatrix[ind1][ind2] = weight;
             adjWeightMatrix[ind2][ind1] = weight;
             return true;
@@ -82,7 +84,7 @@ public class MarioGraph<E> extends Graph<E>{
         if(ind1 == -1 || ind2 == -1){
             return false;
         }
-        if(adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind1][ind2] == 0.0){
+        if(adjWeightMatrix[ind1][ind2] == null){
             adjWeightMatrix[ind1][ind2] = weight;
             return true;
         }
@@ -175,8 +177,8 @@ public class MarioGraph<E> extends Graph<E>{
             }
         }
         if(super.isWeighted){
-            if(adjWeightMatrix[ind1][ind2] > 0.0){ //adjWeightMatrix[ind1][ind2] != null ||
-                adjWeightMatrix[ind1][ind2] = 0.0;
+            if(adjWeightMatrix[ind1][ind2] == null){ //adjWeightMatrix[ind1][ind2] != null ||
+                adjWeightMatrix[ind1][ind2] = null;
                 return true;
             }
         }
@@ -200,9 +202,9 @@ public class MarioGraph<E> extends Graph<E>{
             }
         }
         if(super.isWeighted){
-            if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2]  > 0.0)){
-                adjWeightMatrix[ind1][ind2] = 0.0;
-                adjWeightMatrix[ind2][ind1] = 0.0;
+            if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2] != null)){
+                adjWeightMatrix[ind1][ind2] = null;
+                adjWeightMatrix[ind2][ind1] = null;
                 return true;
             }
         }
@@ -219,13 +221,10 @@ public class MarioGraph<E> extends Graph<E>{
         if(ind1 == -1 || ind2 == -1){
             return false;
         }
-        //TODO: preguntar si la logica está bien
-        if(adjWeightMatrix[ind1][ind2] > 0.0){ //|| adjWeightMatrix[ind1][ind2] != null
-            if(weight > 0.0) {
-                adjWeightMatrix[ind1][ind2] = weight;
+        if(adjWeightMatrix[ind1][ind2] != null){
+            adjWeightMatrix[ind1][ind2] = weight;
                 return true;
             }
-        }
         return false;
     }
 
@@ -239,60 +238,38 @@ public class MarioGraph<E> extends Graph<E>{
         if(ind1 == -1 || ind2 == -1){
             return false;
         }
-        //TODO: preguntar si la logica está bien
-        if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2] > 0.0)){
-            if(weight > 0.0) {
-                adjWeightMatrix[ind1][ind2] = weight;
-                adjWeightMatrix[ind2][ind1] = weight;
-                return true;
-            }
+        if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2] != null)){
+            adjWeightMatrix[ind1][ind2] = weight;
+            adjWeightMatrix[ind2][ind1] = weight;
+            return true;
         }
         return false;
     }
 
     @Override
     public Double getArcWeight(E index1, E index2) {
-        //if(!super.isWeighted) return false;
-        //TODO: exception por si el grafo no es ponderado?
-        if(index1.equals(index2))
-            return 0.0;
+        if (!super.isWeighted) return null;
+        if (index1.equals(index2))
+            return null;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        /*
-        if(ind1 == -1 || ind2 == -1){
-            return false;
+        if (ind1 == -1 || ind2 == -1) {
+            return null;
         }
-        //TODO: exception por si el grafo no es ponderado?
-         */
         return adjWeightMatrix[ind1][ind2];
     }
 
     @Override
     public Double getEdgeWeight(E index1, E index2) {
-        //if(!super.isWeighted) return false;
-        //TODO: exception por si el grafo no es ponderado?
+        if(!super.isWeighted) return null;
         if(index1.equals(index2))
-            return 0.0;
+            return null;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        /*
         if(ind1 == -1 || ind2 == -1){
-            return false;
+            return null;
         }
-        //TODO: exception por si el grafo no es ponderado?
-         */
         return adjWeightMatrix[ind1][ind2];
-    }
-
-    // Función auxiliar por si se necesita
-    private boolean arcExists(E index1, E index2){
-        if(index1.equals(index2))
-            return false;
-        int ind1 = this.vertices.indexOf(index1);
-        int ind2 = this.vertices.indexOf(index2);
-        if(adjWeightMatrix[ind1][ind2] > 0.0) return true;
-        if(adjBoolMatrix[ind1][ind2]) return true;
-        return false;
     }
 
     @Override
@@ -311,6 +288,7 @@ public class MarioGraph<E> extends Graph<E>{
         }
         System.out.println();
 
+        //TODO: signo infinito en null
         if(super.isWeighted){
             for(int i = 0; i < adjWeightMatrix.length; i++){
                 //System.out.printf("%s ",vertices.get(i));
