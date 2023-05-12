@@ -24,6 +24,12 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addVertex(E vtx) {
+        if(super.isWeighted){
+            if(vertices.size() == adjWeightMatrix.length) return false;
+        }
+        if(!super.isWeighted){
+            if(vertices.size() == adjBoolMatrix.length) return false;
+        }
         if(this.vertices.contains(vtx))
             return false;
         this.vertices.add(vtx);
@@ -32,11 +38,14 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addEdge(E index1, E index2) {
+        if(super.isWeighted) return false;
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        // TODO: Regresar falso si alguno es -1
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
         if(!adjBoolMatrix[ind1][ind2] && !adjBoolMatrix[ind2][ind1]){
             adjBoolMatrix[ind1][ind2] = true;
             adjBoolMatrix[ind2][ind1] = true;
@@ -47,12 +56,15 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addEdge(E index1, E index2, double weight) {
-        // TODO: regresar falso si es no ponderado
-        if(index1.equals(index2))
-            return false;
+        if(!super.isWeighted) return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(adjWeightMatrix[ind1][ind2] == 0.0 && adjWeightMatrix[ind2][ind1] == 0.0){
+        if(index1.equals(index2))
+            return false;
+        if(ind1 == -1 || ind2 == -1){
+         return false;
+        }
+        if((adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind1][ind2] == 0.0) && (adjWeightMatrix[ind2][ind1] == null || adjWeightMatrix[ind2][ind1] == 0.0)){
             adjWeightMatrix[ind1][ind2] = weight;
             adjWeightMatrix[ind2][ind1] = weight;
             return true;
@@ -62,11 +74,15 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addArc(E index1, E index2, double weight) {
+        if(!super.isWeighted) return false;
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(adjWeightMatrix[ind1][ind2] == 0.0){
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        if(adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind1][ind2] == 0.0){
             adjWeightMatrix[ind1][ind2] = weight;
             return true;
         }
@@ -75,10 +91,14 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public boolean addArc(E index1, E index2){
+        if(super.isWeighted) return false;
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
         if(!adjBoolMatrix[ind1][ind2]){
             adjBoolMatrix[ind1][ind2] = true;
             return true;
@@ -145,9 +165,20 @@ public class MarioGraph<E> extends Graph<E>{
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(adjBoolMatrix[ind1][ind2]){
-            adjBoolMatrix[ind1][ind2] = false;
-            return true;
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        if(!super.isWeighted){
+            if(adjBoolMatrix[ind1][ind2]){
+                adjBoolMatrix[ind1][ind2] = false;
+                return true;
+            }
+        }
+        if(super.isWeighted){
+            if(adjWeightMatrix[ind1][ind2] > 0.0){ //adjWeightMatrix[ind1][ind2] != null ||
+                adjWeightMatrix[ind1][ind2] = 0.0;
+                return true;
+            }
         }
         return false;
     }
@@ -158,56 +189,98 @@ public class MarioGraph<E> extends Graph<E>{
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(adjBoolMatrix[ind1][ind2] && adjBoolMatrix[ind2][ind1]){
-            adjBoolMatrix[ind1][ind2] = false;
-            adjBoolMatrix[ind2][ind1] = false;
-            return true;
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        if(!super.isWeighted){
+            if(adjBoolMatrix[ind1][ind2] && adjBoolMatrix[ind2][ind1]){
+                adjBoolMatrix[ind1][ind2] = false;
+                adjBoolMatrix[ind2][ind1] = false;
+                return true;
+            }
+        }
+        if(super.isWeighted){
+            if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2]  > 0.0)){
+                adjWeightMatrix[ind1][ind2] = 0.0;
+                adjWeightMatrix[ind2][ind1] = 0.0;
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public boolean updateArc(E index1, E index2, double weight) {
+        if(!super.isWeighted) return false;
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(weight >= 0.0){
-            adjWeightMatrix[ind1][ind2] = weight;
-            return true;
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        //TODO: preguntar si la logica está bien
+        if(adjWeightMatrix[ind1][ind2] > 0.0){ //|| adjWeightMatrix[ind1][ind2] != null
+            if(weight > 0.0) {
+                adjWeightMatrix[ind1][ind2] = weight;
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public boolean updateEdge(E index1, E index2, double weight) {
+        if(!super.isWeighted) return false;
         if(index1.equals(index2))
             return false;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
-        if(weight >= 0.0){
-            adjWeightMatrix[ind1][ind2] = weight;
-            adjWeightMatrix[ind2][ind1] = weight;
-            return true;
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        //TODO: preguntar si la logica está bien
+        if((adjWeightMatrix[ind1][ind2].equals(adjWeightMatrix[ind2][ind1])) && (adjWeightMatrix[ind1][ind2] > 0.0)){
+            if(weight > 0.0) {
+                adjWeightMatrix[ind1][ind2] = weight;
+                adjWeightMatrix[ind2][ind1] = weight;
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public Double getArcWeight(E index1, E index2) {
+        //if(!super.isWeighted) return false;
+        //TODO: exception por si el grafo no es ponderado?
         if(index1.equals(index2))
             return 0.0;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
+        /*
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        //TODO: exception por si el grafo no es ponderado?
+         */
         return adjWeightMatrix[ind1][ind2];
     }
 
     @Override
     public Double getEdgeWeight(E index1, E index2) {
+        //if(!super.isWeighted) return false;
+        //TODO: exception por si el grafo no es ponderado?
         if(index1.equals(index2))
             return 0.0;
         int ind1 = this.vertices.indexOf(index1);
         int ind2 = this.vertices.indexOf(index2);
+        /*
+        if(ind1 == -1 || ind2 == -1){
+            return false;
+        }
+        //TODO: exception por si el grafo no es ponderado?
+         */
         return adjWeightMatrix[ind1][ind2];
     }
 
@@ -224,30 +297,40 @@ public class MarioGraph<E> extends Graph<E>{
 
     @Override
     public String toString(){
+        /*
+        StringBuilder sb =  new StringBuilder();
+        sb.append()
+         */
         return super.toString();
     }
 
     public void print(){
         System.out.print(" ");
         for(E vertex : vertices){
-            System.out.print(vertex.toString() + " ");
+            System.out.printf("%s ",vertex.toString());
         }
         System.out.println();
 
         if(super.isWeighted){
             for(int i = 0; i < adjWeightMatrix.length; i++){
-                System.out.print(vertices.get(i) + "  ");
+                //System.out.printf("%s ",vertices.get(i));
                 for(int j = 0; j < adjWeightMatrix[i].length; j++){
-                    System.out.print(adjWeightMatrix[i][j] + " ");
+                    if(adjWeightMatrix[i][j] == null) System.out.print("0.0 ");
+                    else{
+                        System.out.printf("%.1f ",adjWeightMatrix[i][j]);
+                    }
                 }
                 System.out.println();
             }
         }
+
+
         if(!super.isWeighted){
             for(int i = 0; i < adjBoolMatrix.length; i++){
-                System.out.print(vertices.get(i) + "  ");
+                //System.out.printf("%S ",vertices.get(i));
                 for(int j = 0; j < adjBoolMatrix[i].length; j++){
-                    System.out.print(adjBoolMatrix[i][j] + " ");
+                    if(adjBoolMatrix[i][j]) System.out.print("T ");
+                    if(!adjBoolMatrix[i][j]) System.out.print("F ");
                 }
                 System.out.println();
             }
