@@ -32,10 +32,18 @@ public class TestGraph {
 
         //System.out.println(intGraph.addEdge(15, 10)); // return false
         //System.out.println(intGraph.addEdge(15, 58)); // return false
+        LuigiGraph<Integer> intG = new LuigiGraph<>(true);
+        intG.addVertex(1);
+        intG.addVertex(2);
+        intG.addVertex(3);
+        intG.addEdge(1,2,100);
+        intG.addEdge(1,3,100);
 
-        System.out.println(intGraph);
-        intGraph.DFS(15);
-        intGraph.BFS(10000);
+        System.out.println(intG);
+
+        intG.BFS(1000);
+        //intGraph.DFS(15);
+        //intGraph.BFS(10000);
         //intGraph.print();
         //intGraph.DFS(15);
     }

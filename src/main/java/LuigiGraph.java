@@ -210,8 +210,7 @@ public class LuigiGraph<E> extends Graph<E>{
 
     public void DFS(E src){ //Find all vertexes from a origin Vertex that can be accessed
         if (!vertexMap.containsKey(src)) {
-            System.out.println("El vértice no existe en el grafo.");
-            return;
+            throw new IllegalArgumentException("El vértice no existe en el grafo.");
         }
         System.out.println("DFS:");
         Vertex startVertex = vertexMap.get(src);
@@ -233,8 +232,7 @@ public class LuigiGraph<E> extends Graph<E>{
 
     public void BFS(E src) {
         if (!vertexMap.containsKey(src)) {
-            System.out.println("El vértice no existe en el grafo.");
-            return;
+            throw new IllegalArgumentException("El vértice no existe en el grafo.");
         }
         System.out.println("\nBFS");
         resetVisited();
@@ -263,8 +261,7 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
-    // Método para reiniciar el estado de visita de todos los vértices
-    private void resetVisited() {
+    private void resetVisited() {   // Método para reiniciar el estado de visita de todos los vértices
         for (Vertex vertex : vertexMap.values()) {
             vertex.visited = false;
         }
@@ -278,7 +275,9 @@ public class LuigiGraph<E> extends Graph<E>{
             st.append(vertex.key);
             st.append("-> ");
             for(Pair pair: vertex.neighbours){
-                st.append(pair.v.key).append(", ");
+                st.append(pair.v.key);
+                if (this.isWeighted) st.append(String.format(" (%.2f)",pair.weight));
+                st.append(", ");
             }
             st.append("\n");
         }
