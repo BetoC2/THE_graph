@@ -1,10 +1,7 @@
 import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LuigiGraph<E> extends Graph<E>{
 
@@ -212,10 +209,13 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     public void DFS(E src){ //Find all vertexes from a origin Vertex that can be accessed
-        Vertex startVertex = vertexMap.get(src);
-        for (Vertex v : vertexMap.values()) {
-            v.visited = false;
+        if (!vertexMap.containsKey(src)) {
+            System.out.println("El vértice no existe en el grafo.");
+            return;
         }
+        System.out.println("DFS:");
+        Vertex startVertex = vertexMap.get(src);
+        resetVisited();
         Pair startPair = new Pair(startVertex, null);
         recursiveDFS(startPair);
     }
@@ -230,22 +230,57 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
-    public void BFS(E src, E dest){
 
+    public void BFS(E src) {
+        if (!vertexMap.containsKey(src)) {
+            System.out.println("El vértice no existe en el grafo.");
+            return;
+        }
+        System.out.println("\nBFS");
+        resetVisited();
+
+        // Cola para almacenar los vértices que se van a visitar
+        Queue<Vertex> queue = new LinkedList<>();
+
+        // Marca el vértice de inicio como visitado y lo añade a la cola
+        Vertex startVertex = vertexMap.get(src);
+        startVertex.visited = true;
+        queue.add(startVertex);
+
+        // Ciclo para visitar los vértices en la cola
+        while (!queue.isEmpty()) {
+            // Obtiene el siguiente vértice en la cola
+            Vertex currentVertex = queue.poll();
+            System.out.print(currentVertex.key + " ");
+
+            // Visita los vecinos del vértice actual y los añade a la cola si aún no han sido visitados
+            for (Pair neighbor : currentVertex.neighbours) {
+                if (!neighbor.v.visited) {
+                    neighbor.v.visited = true;
+                    queue.add(neighbor.v);
+                }
+            }
+        }
+    }
+
+    // Método para reiniciar el estado de visita de todos los vértices
+    private void resetVisited() {
+        for (Vertex vertex : vertexMap.values()) {
+            vertex.visited = false;
+        }
     }
 
     @Override
     public String toString(){
         StringBuilder st = new StringBuilder();
+        st.append("Impresión de grafo:\n");
         for(Vertex vertex: vertexMap.values()){
             st.append(vertex.key);
-            st.append(": ");
+            st.append("-> ");
             for(Pair pair: vertex.neighbours){
                 st.append(pair.v.key).append(", ");
-
             }
             st.append("\n");
-
         }
         return st.toString();
     }
