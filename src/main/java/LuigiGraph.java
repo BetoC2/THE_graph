@@ -185,9 +185,9 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     @Override
-    public Double getArcWeight(E src, E dest) throws NullObjectReceivedException{
+    public Double getArcWeight(E src, E dest) {
         if (src == null || dest == null)
-            throw new NullObjectReceivedException(src == null? "src": "dest");
+            return null;
 
         Vertex srcV = this.vertexMap.get(src);
         for (Pair pair: srcV.neighbours){
@@ -198,9 +198,9 @@ public class LuigiGraph<E> extends Graph<E>{
     }
 
     @Override
-    public Double getEdgeWeight(E src, E dest) throws NullObjectReceivedException {
+    public Double getEdgeWeight(E src, E dest) {
         if (src == null || dest == null)
-            throw new NullObjectReceivedException(src == null? "src": "dest");
+            return null;
 
         if (arcExists(src, dest) && arcExists(dest, src))
             return getArcWeight(src, dest);
