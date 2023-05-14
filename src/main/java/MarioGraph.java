@@ -2,14 +2,29 @@ import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
-
+/**
+ * Class implementing a graph with adjacency matrix.
+ * @param <E> the type of the elements stored in the vertices of the graph
+ */
 public class MarioGraph<E> extends Graph<E>{
+    /**
+     * The matrices will store the value of its index/vertex
+     */
     private Boolean[][] adjBoolMatrix; //Boolean Adjancecy Matrix
     private Double[][] adjWeightMatrix; //Double Adjancecy Matrix
+    /**
+     * The ArrayList will store the vertices. The vertex index in the list is the same
+     * in the matrix
+     */
     private ArrayList<E> vertices;
+
     private boolean[] visited;
 
+    /**
+     * Constructor for MarioGraph class.
+     * @param numVrx a int value indicating the number of vertices the Matrix will have
+     * @param isWeighted a boolean value indicating whether the graph is weighted or not
+     */
     MarioGraph(int numVrx,boolean isWeighted){
         super(isWeighted);
         if (!isWeighted) {
@@ -20,14 +35,23 @@ public class MarioGraph<E> extends Graph<E>{
                 }
             }//numVrx = Number of Vertex
         }
-        if(isWeighted)
-            //TODO: poner valor 0 a los indices [x][x]
+        if(isWeighted) {
             this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
+            for(int i = 0; i < numVrx; i++){
+                adjWeightMatrix[i][i] = 0.0;
+            }
+        }
         this.vertices = new ArrayList<>();
         visited = new boolean[numVrx];
 
     }
 
+    /**
+     * Adds a vertex to the graph.
+     * @param vtx the element to be added as a vertex to the graph.
+     * @return true if the vertex was added successfully, false if the element recived is null,
+     * if already exists on the graph or if the Matrix is already full
+     */
     @Override
     public boolean addVertex(E vtx) {
         if(super.isWeighted){
@@ -42,6 +66,13 @@ public class MarioGraph<E> extends Graph<E>{
         return true;
     }
 
+    /**
+     * Adds an unweighted edge between two vertices in the graph.
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @return true if the edge was added successfully, false if the graph is weighted, if the
+     * indexes are equal or do not exist
+     */
     @Override
     public boolean addEdge(E index1, E index2) {
         if(super.isWeighted) return false;
@@ -60,6 +91,14 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Adds a weighted edge between two vertices in the graph.
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @param weight the weight of the edge
+     * @return true if the edge was added successfully, false if the edge already exists,
+     * if the index1 and index2 are equals or do not exist, or the matrix is not weighted.
+     */
     @Override
     public boolean addEdge(E index1, E index2, double weight) {
         if(!super.isWeighted) return false;
@@ -68,9 +107,8 @@ public class MarioGraph<E> extends Graph<E>{
         if(index1.equals(index2))
             return false;
         if(ind1 == -1 || ind2 == -1){
-         return false;
+            return false;
         }
-        //TODO: Valor 0.0 es valido
         if(adjWeightMatrix[ind1][ind2] == null || adjWeightMatrix[ind2][ind1] == null){
             adjWeightMatrix[ind1][ind2] = weight;
             adjWeightMatrix[ind2][ind1] = weight;
@@ -79,6 +117,14 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Adds a weighted arc from one vertex to another in the graph.
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @param weight the weight of the arc.
+     * @return true if the arc was added successfully, false if the arc already exists,
+     * if the index1 and index2 are equal or do not exist, or the matrix is not weighted.
+     */
     @Override
     public boolean addArc(E index1, E index2, double weight) {
         if(!super.isWeighted) return false;
@@ -96,6 +142,13 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Adds an unweighted arc from one vertex to another in the graph.
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @return true if the arc was added successfully, false if the arc already exists, if the
+     * indexes are equal or do not exist, or if the matrix is weighted.
+     */
     @Override
     public boolean addArc(E index1, E index2){
         if(super.isWeighted) return false;
@@ -113,11 +166,22 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Gets the number of vertices in the graph.
+     * @return the number of vertices in the graph
+     */
     @Override
     public int vertexCount() {
         return this.vertices.size();
     }
 
+    /**
+     * Function used in removeVertex. When a vertex is deleted this functions helps removing the values in the matrix's column
+     * of the indicated vertex, by sorting it to the last column
+     * @param matrix the matrix that will be modificated
+     * @param indObj the index of the vertex that will be deleted
+     * @param lenght the size/lenght of the matrix (total number of vertices)
+     */
     private void swapVertical(Object[][] matrix,int indObj, int lenght){
         for(int i = 0; i < lenght; i++){
             for(int j = indObj; j < lenght - 1; j++){
@@ -126,6 +190,13 @@ public class MarioGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Function used in removeVertex. When a vertex is deleted this functions helps removing the values in the matrix's row
+     * of the indicated vertex, by sorting it to the last column
+     * @param matrix the matrix that will be modificated
+     * @param indObj the index of the vertex that will be deleted
+     * @param length the size/lenght of the matrix (total number of vertices)
+     */
     private void swapHorizontal(Object[][] matrix,int indObj, int length){
         for(int i = indObj; i < length - 1; i++){
             for(int j = 0; j < length; j++){
@@ -134,15 +205,29 @@ public class MarioGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Function used in removeVertex. When a vertex is deleted this functions helps filling with nulls the last row and column
+     * of the matrix, which are the previous deleted vertex, indicating that there is a new vertex
+     * available to add
+     * @param matrix the matrix that will be modificated
+     * @param length the size/lenght of the matrix (total number of vertices)
+     */
     private void fillNulls(Object[][] matrix, int length){
         for(int i = 0; i < length; i++){
             matrix[i][length-1] = null;
         }
         for(int i = 0; i < length; i++){
-            adjWeightMatrix[length][i] = null;
+            matrix[length][i] = null;
         }
     }
 
+    /**
+     * Removes the specified vertex from the graph by sorting the row and column the vertex
+     * represent, and then filling them with null values. Indicating there is a new space available
+     * for a new vertex.
+     * @param vtx the vertex to be removed.
+     * @return true if the vertex was successfully removed, false otherwise.
+     */
     @Override
     public boolean removeVertex(E vtx) {
         if(vertices.contains(vtx)){
@@ -166,6 +251,13 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Removes the specified arc from the graph.
+     * @param index1 the vertex in the row of the matrix to be removed
+     * @param index2 the vertex in the column of the matrix to be removed
+     * @return true if the arc was successfully removed, false when the indexes are equal or do not exist,
+     * or if there is not an arc to remove.
+     */
     @Override
     public boolean removeArc(E index1, E index2) {
         if(index1.equals(index2))
@@ -190,6 +282,13 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Removes the specified edge from the graph.
+     * @param index1 the vertex in the row of the matrix to be removed
+     * @param index2 the vertex in the column of the matrix to be removed
+     * @return true if the edge was successfully removed, false when the indexes are equal or do not exist,
+     * or if there is not an edge to remove.
+     */
     @Override
     public boolean removeEdge(E index1, E index2) {
         if(index1.equals(index2))
@@ -216,6 +315,14 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Updates the weight of the specified arc.
+     * If the graph is not weighted, returns false.
+     * @param index1 the vertex in the row of the matrix to be removed
+     * @param index2 the vertex in the column of the matrix to be removed
+     * @param weight the new weight to be set.
+     * @return true if the weight of the arc was successfully updated, If the arc does not exist in the graph, returns false.
+     */
     @Override
     public boolean updateArc(E index1, E index2, double weight) {
         if(!super.isWeighted) return false;
@@ -228,11 +335,19 @@ public class MarioGraph<E> extends Graph<E>{
         }
         if(adjWeightMatrix[ind1][ind2] != null){
             adjWeightMatrix[ind1][ind2] = weight;
-                return true;
-            }
+            return true;
+        }
         return false;
     }
 
+    /**
+     * Updates the weight of the specified edge.
+     * If the graph is not weighted, returns false.
+     * @param index1 the vertex in the row of the matrix to be removed
+     * @param index2 the vertex in the column of the matrix to be removed
+     * @param weight the new weight to be set.
+     * @return true if the weight of the edge was successfully updated, if the edge doesn't exist, returns false.
+     */
     @Override
     public boolean updateEdge(E index1, E index2, double weight) {
         if(!super.isWeighted) return false;
@@ -251,6 +366,13 @@ public class MarioGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Get the weight of the arc between two vertices.
+     * If the graph is not weighted, returns null
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @return null if any of the elements is null or the arc doesn't exist.
+     */
     @Override
     public Double getArcWeight(E index1, E index2) {
         if (!super.isWeighted) return null;
@@ -264,6 +386,13 @@ public class MarioGraph<E> extends Graph<E>{
         return adjWeightMatrix[ind1][ind2];
     }
 
+    /**
+     * Get the weight of the edge between two vertices.
+     * If the graph is not weighted, returns null
+     * @param index1 the vertex in the row of the matrix
+     * @param index2 the vertex in the column of the matrix
+     * @return null if any of the elements is null or the edge doesn't exist.
+     */
     @Override
     public Double getEdgeWeight(E index1, E index2) {
         if(!super.isWeighted) return null;
@@ -283,36 +412,23 @@ public class MarioGraph<E> extends Graph<E>{
      * A stack is used to add the path the method establishes (src -> neighbors)
      * @param src the source vertex key of the arc.
      */
-
     public void DFS(E src) {
-        if (!vertices.contains(src)) {
-            throw new IllegalArgumentException("El vértice no existe en el grafo.");
-        }
-
-        System.out.println("\nDFS");
-        Stack<E> stack = new Stack<>();
         int srcIndex = vertices.indexOf(src);
         visited[srcIndex] = true;
-        stack.push(src);
-        while (!stack.isEmpty()) {
-            // Stack top vertex is visited
-            E current = stack.pop();
-            System.out.print(current + " -> ");
+        System.out.print(src + " ");
 
-            // Every neigbor is added to stack
-            if (this.isWeighted) { //When edges & arcs are represented by a weight
-                for (int i = 0; i < adjWeightMatrix.length; i++) {
-                    if (adjWeightMatrix[vertices.indexOf(current)][i] != null && !visited[i]) {
-                        visited[i] = true;
-                        stack.push(vertices.get(i));
-                    }
+        if(this.isWeighted){
+            for (int i = 0; i < adjWeightMatrix.length; i++) {
+                if (adjWeightMatrix[srcIndex][i] != null && !visited[i]) {
+                    DFS(vertices.get(i));
                 }
-            } else { //When edges & arcs are represented by a boolean
-                for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[vertices.indexOf(current)][i] && !visited[i]) {
-                        visited[i] = true;
-                        stack.push(vertices.get(i));
-                    }
+            }
+        }
+
+        else{
+            for (int i = 0; i < adjBoolMatrix.length; i++) {
+                if (adjBoolMatrix[srcIndex][i] == true && !visited[i]) {
+                    DFS(vertices.get(i));
                 }
             }
         }
@@ -325,14 +441,7 @@ public class MarioGraph<E> extends Graph<E>{
      * and poll this one, the process would be completed when queue is empty
      * @param src the source vertex key of the arc.
      */
-
     public void BFS(E src){
-        if (!vertices.contains(src)) {
-            throw new IllegalArgumentException("El vértice no existe en el grafo.");
-        }
-
-        System.out.println("BFS");
-
         int srcIndex = vertices.indexOf(src);
         visited = new boolean[visited.length];
         visited[srcIndex] = true;
@@ -341,20 +450,19 @@ public class MarioGraph<E> extends Graph<E>{
 
         while(!queue.isEmpty()){
             int current = queue.poll();
-            System.out.print(vertices.get(current) + " -> ");
+            System.out.print(vertices.get(current) + " ");
 
-            if(this.isWeighted){ //When edges & arcs are represented by a weight
+            if(this.isWeighted){
                 for (int i = 0; i < adjWeightMatrix.length; i++) {
                     if (adjWeightMatrix[current][i] != null && !visited[i]) {
-                        //Every neighbor is located and set as visited according to its index
                         visited[i] = true;
                         queue.add(i);
                     }
                 }
             }
-            else{ //When edges & arcs are represented by a boolean
+            else{
                 for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[current][i] && !visited[i]) {
+                    if (adjBoolMatrix[current][i] == true && !visited[i]) {
                         visited[i] = true;
                         queue.add(i);
                     }
@@ -364,41 +472,42 @@ public class MarioGraph<E> extends Graph<E>{
 
     }
 
-
+    /**
+     * Prints the matrix that shows every vertex of the referred graph
+     * If the graph is weighted, weight will be printed as well
+     */
     @Override
     public String toString(){
-        /*
-        StringBuilder sb =  new StringBuilder();
-        sb.append()
-         */
+        print();
         return super.toString();
     }
 
     public void print(){
-        System.out.print(" ");
-        for(E vertex : vertices){
-            System.out.printf("%s ",vertex.toString());
-        }
-        System.out.println();
-
-        //TODO: signo infinito en null
         if(super.isWeighted){
+            System.out.print("  ");
+            for(E vertex : vertices){
+                System.out.printf(" %s   ",vertex.toString());
+            }
+            System.out.println();
             for(int i = 0; i < adjWeightMatrix.length; i++){
-                //System.out.printf("%s ",vertices.get(i));
+                if(i < (vertices.size())) System.out.printf("%s ",vertices.get(i));
+                if(i > (vertices.size()-1)) System.out.print("  ");
                 for(int j = 0; j < adjWeightMatrix[i].length; j++){
-                    if(adjWeightMatrix[i][j] == null) System.out.print("0.0 ");
-                    else{
-                        System.out.printf("%.1f ",adjWeightMatrix[i][j]);
-                    }
+                    if(adjWeightMatrix[i][j] != null) System.out.printf("%.1f  ",adjWeightMatrix[i][j]);
+                    if(adjWeightMatrix[i][j] == null) System.out.print("null ");
                 }
                 System.out.println();
             }
         }
-
-
         if(!super.isWeighted){
+            System.out.print("  ");
+            for(E vertex : vertices){
+                System.out.printf("%s ",vertex.toString());
+            }
+            System.out.println();
             for(int i = 0; i < adjBoolMatrix.length; i++){
-                //System.out.printf("%S ",vertices.get(i));
+                if(i < (vertices.size())) System.out.printf("%s ",vertices.get(i));
+                if(i > (vertices.size()-1)) System.out.print("  ");
                 for(int j = 0; j < adjBoolMatrix[i].length; j++){
                     if(adjBoolMatrix[i][j]) System.out.print("T ");
                     if(!adjBoolMatrix[i][j]) System.out.print("F ");
@@ -407,6 +516,4 @@ public class MarioGraph<E> extends Graph<E>{
             }
         }
     }
-
-
 }
