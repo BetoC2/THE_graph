@@ -330,6 +330,11 @@ public class LuigiGraph<E> extends Graph<E>{
         return null;
     }
 
+    /**
+     * Establishes the route starting from src vertex in depth
+     * If the vertex doesn´t exist, an exception is thrown
+     * @param src the source vertex key of the arc.
+     */
     public void DFS(E src){ //Find all vertexes from a origin Vertex that can be accessed
         if (!vertexMap.containsKey(src)) {
             throw new IllegalArgumentException("El vértice no existe en el grafo.");
@@ -341,6 +346,10 @@ public class LuigiGraph<E> extends Graph<E>{
         recursiveDFS(startPair);
     }
 
+    /**
+     * Helper method for DFS
+     * @param pair the neighbor of the current visited vertex
+     */
     private void recursiveDFS(Pair pair){
         pair.v.visited = true;
         System.out.print(pair.v.key + " ");
@@ -351,6 +360,11 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Establishes the route starting from src vertex in breadth
+     * If the vertex doesn´t exist, an exception is thrown
+     * @param src the source vertex key of the arc.
+     */
 
     public void BFS(E src) {
         if (!vertexMap.containsKey(src)) {
@@ -359,21 +373,17 @@ public class LuigiGraph<E> extends Graph<E>{
         System.out.println("\nBFS");
         resetVisited();
 
-        // Cola para almacenar los vértices que se van a visitar
         Queue<Vertex> queue = new LinkedList<>();
 
-        // Marca el vértice de inicio como visitado y lo añade a la cola
         Vertex startVertex = vertexMap.get(src);
         startVertex.visited = true;
         queue.add(startVertex);
 
-        // Ciclo para visitar los vértices en la cola
         while (!queue.isEmpty()) {
-            // Obtiene el siguiente vértice en la cola
             Vertex currentVertex = queue.poll();
             System.out.print(currentVertex.key + " ");
 
-            // Visita los vecinos del vértice actual y los añade a la cola si aún no han sido visitados
+            // "Visits the neighbors of the current vertex and adds them to the queue if they have not been visited yet."
             for (Pair neighbor : currentVertex.neighbours) {
                 if (!neighbor.v.visited) {
                     neighbor.v.visited = true;
@@ -383,12 +393,19 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Helper method for DFS & BFS to mark as visited every traversed vertex and then remove that mark
+     */
     private void resetVisited() {   // Método para reiniciar el estado de visita de todos los vértices
         for (Vertex vertex : vertexMap.values()) {
             vertex.visited = false;
         }
     }
 
+    /**
+     * Prints every vertex in referred graph
+     * If the graph is weighted, weight will be printed as well
+     */
     @Override
     public String toString(){
         StringBuilder st = new StringBuilder();
