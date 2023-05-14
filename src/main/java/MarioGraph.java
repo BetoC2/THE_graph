@@ -1,10 +1,13 @@
 import java.net.DatagramPacket;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class MarioGraph<E> extends Graph<E>{
     private Boolean[][] adjBoolMatrix; //Boolean Adjancecy Matrix
     private Double[][] adjWeightMatrix; //Double Adjancecy Matrix
     private ArrayList<E> vertices;
+    private boolean[] visited;
 
     MarioGraph(int numVrx,boolean isWeighted){
         super(isWeighted);
@@ -20,6 +23,7 @@ public class MarioGraph<E> extends Graph<E>{
             //TODO: poner valor 0 a los indices [x][x]
             this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
         this.vertices = new ArrayList<>();
+        visited = new boolean[numVrx];
 
     }
 
@@ -271,6 +275,61 @@ public class MarioGraph<E> extends Graph<E>{
         }
         return adjWeightMatrix[ind1][ind2];
     }
+
+
+    public void DFS(E src) {
+        int srcIndex = vertices.indexOf(src);
+        visited[srcIndex] = true;
+        System.out.print(src + " ");
+
+        if(this.isWeighted){
+            for (int i = 0; i < adjWeightMatrix.length; i++) {
+                if (adjWeightMatrix[srcIndex][i] != null && !visited[i]) {
+                    DFS(vertices.get(i));
+                }
+            }
+        }
+
+        else{
+            for (int i = 0; i < adjBoolMatrix.length; i++) {
+                if (adjBoolMatrix[srcIndex][i] == true && !visited[i]) {
+                    DFS(vertices.get(i));
+                }
+            }
+        }
+    }
+
+    public void BFS(E src){
+        int srcIndex = vertices.indexOf(src);
+        visited = new boolean[visited.length];
+        visited[srcIndex] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(srcIndex);
+
+        while(!queue.isEmpty()){
+            int current = queue.poll();
+            System.out.print(vertices.get(current) + " ");
+
+            if(this.isWeighted){
+                for (int i = 0; i < adjWeightMatrix.length; i++) {
+                    if (adjWeightMatrix[current][i] != null && !visited[i]) {
+                        visited[i] = true;
+                        queue.add(i);
+                    }
+                }
+            }
+            else{
+                for (int i = 0; i < adjBoolMatrix.length; i++) {
+                    if (adjBoolMatrix[current][i] == true && !visited[i]) {
+                        visited[i] = true;
+                        queue.add(i);
+                    }
+                }
+            }
+        }
+
+    }
+
 
     @Override
     public String toString(){
