@@ -352,7 +352,7 @@ public class LuigiGraph<E> extends Graph<E>{
      */
     private void recursiveDFS(Pair pair){
         pair.v.visited = true;
-        System.out.print(pair.v.key + " ");
+        System.out.print(pair.v.key + " -> ");
         for(Pair neighbor: pair.v.neighbours){
             if (!neighbor.v.visited) {
                 recursiveDFS(neighbor);
@@ -381,7 +381,7 @@ public class LuigiGraph<E> extends Graph<E>{
 
         while (!queue.isEmpty()) {
             Vertex currentVertex = queue.poll();
-            System.out.print(currentVertex.key + " ");
+            System.out.print(currentVertex.key + " -> ");
 
             // "Visits the neighbors of the current vertex and adds them to the queue if they have not been visited yet."
             for (Pair neighbor : currentVertex.neighbours) {
