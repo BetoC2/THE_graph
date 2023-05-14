@@ -277,6 +277,12 @@ public class MarioGraph<E> extends Graph<E>{
         return adjWeightMatrix[ind1][ind2];
     }
 
+    /**
+     * Establishes the route starting from src vertex in depth
+     * If the vertex doesn´t exist, an exception is thrown
+     * A stack is used to add the path the method establishes (src -> neighbors)
+     * @param src the source vertex key of the arc.
+     */
 
     public void DFS(E src) {
         if (!vertices.contains(src)) {
@@ -284,29 +290,26 @@ public class MarioGraph<E> extends Graph<E>{
         }
 
         System.out.println("\nDFS");
-        // Creamos una pila y la inicializamos con el vértice inicial
         Stack<E> stack = new Stack<>();
         int srcIndex = vertices.indexOf(src);
         visited[srcIndex] = true;
         stack.push(src);
-
-        // Realizamos DFS iterativamente con una pila
         while (!stack.isEmpty()) {
-            // Sacamos el vértice superior de la pila y lo visitamos
+            // Stack top vertex is visited
             E curr = stack.pop();
             System.out.print(curr + " ");
 
-            // Agregamos a la pila todos los vecinos no visitados del vértice
-            if (this.isWeighted) {
+            // Every neigbor is added to stack
+            if (this.isWeighted) { //When edges & arcs are represented by a weight
                 for (int i = 0; i < adjWeightMatrix.length; i++) {
                     if (adjWeightMatrix[vertices.indexOf(curr)][i] != null && !visited[i]) {
                         visited[i] = true;
                         stack.push(vertices.get(i));
                     }
                 }
-            } else {
+            } else { //When edges & arcs are represented by a boolean
                 for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[vertices.indexOf(curr)][i] == true && !visited[i]) {
+                    if (adjBoolMatrix[vertices.indexOf(curr)][i] && !visited[i]) {
                         visited[i] = true;
                         stack.push(vertices.get(i));
                     }
@@ -315,6 +318,13 @@ public class MarioGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Establishes the route starting from src vertex in breadth
+     * If the vertex doesn´t exist, an exception is thrown
+     * A queue(LinkedList) is used to print the current value through its index
+     * and poll this one, the process would be completed when queue is empty
+     * @param src the source vertex key of the arc.
+     */
 
     public void BFS(E src){
         if (!vertices.contains(src)) {
@@ -333,17 +343,18 @@ public class MarioGraph<E> extends Graph<E>{
             int current = queue.poll();
             System.out.print(vertices.get(current) + " ");
 
-            if(this.isWeighted){
+            if(this.isWeighted){ //When edges & arcs are represented by a weight
                 for (int i = 0; i < adjWeightMatrix.length; i++) {
                     if (adjWeightMatrix[current][i] != null && !visited[i]) {
+                        //Every neighbor is located and set as visited according to its index
                         visited[i] = true;
                         queue.add(i);
                     }
                 }
             }
-            else{
+            else{ //When edges & arcs are represented by a boolean
                 for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[current][i] == true && !visited[i]) {
+                    if (adjBoolMatrix[current][i] && !visited[i]) {
                         visited[i] = true;
                         queue.add(i);
                     }
