@@ -2,16 +2,28 @@ import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
 
 import java.util.*;
-
+/**
+ * Class implementing a graph with adjacency lists.
+ * @param <E> the type of the elements stored in the vertices of the graph
+ */
 public class LuigiGraph<E> extends Graph<E>{
-
+    /**
+     * The vertexMap will map the value to its vertex
+     */
     private final Map<E, Vertex> vertexMap;
 
+    /**
+     * Constructor for LuigiGraph class.
+     * @param isWeighted a boolean value indicating whether the graph is weighted or not
+     */
     LuigiGraph(boolean isWeighted) {
         super(isWeighted);
         this.vertexMap = new HashMap<>();
     }
 
+    /**
+     * Private class representing a pair of vertices and their weight in the graph.
+     */
     private class Pair {
         Vertex v;
         Double weight;
@@ -21,7 +33,10 @@ public class LuigiGraph<E> extends Graph<E>{
             this.weight = weight;
         }
     }
-
+    /**
+     * Private class representing a vertex in the graph
+     * It has a list of all the pairs (Vertex, weight) that are related to it.
+     */
     private class Vertex {
         E key;
         boolean visited;
@@ -32,15 +47,25 @@ public class LuigiGraph<E> extends Graph<E>{
         }
     }
 
+    /**
+     * Adds a vertex to the graph.
+     * @param vtx the element to be added as a vertex to the graph.
+     * @return true if the vertex was added successfully, false if the element recived is null or already exists on the graph.
+     */
     @Override
     public boolean addVertex(E vtx) {
-        if (vertexMap.get(vtx) != null)
+        if (vertexMap.get(vtx) != null || vtx == null)
             return false;
         vertexMap.put(vtx, new Vertex(vtx));
         return true;
     }
 
-
+    /**
+     * Adds an unweighted edge between two vertices in the graph.
+     * @param src the element in the source vertex of the edge.
+     * @param dest the element in the destination vertex of the edge.
+     * @return true if the edge was added successfully, false if the graph is weighted or any element is null
+     */
     @Override
     public boolean addEdge(E src, E dest){
         if (this.isWeighted)
@@ -48,7 +73,13 @@ public class LuigiGraph<E> extends Graph<E>{
         return addEdgeHelper(src, dest, null);
     }
 
-
+    /**
+     * Adds a weighted edge between two vertices in the graph.
+     * @param src the element in the source vertex of the edge
+     * @param dest the element in the destination vertex of the edge
+     * @param weight the weight of the edge
+     * @return true if the edge was added successfully, false if the graph is unweighted or any element is null
+     */
     @Override
     public boolean addEdge(E src, E dest, double weight){
         if (!this.isWeighted)
@@ -56,6 +87,15 @@ public class LuigiGraph<E> extends Graph<E>{
         return addEdgeHelper(src, dest, weight);
     }
 
+    /**
+     * Adds an edge between two vertices in the graph.
+     * It helps with the two addEdge functions.
+     * If there is only an arc between the two vertices, it will override its weight
+     * @param src the element in the source vertex of the edge
+     * @param dest the element in the destination vertex of the edge
+     * @param weight the weight of the edge, if the vertex is unweighted its value is null.
+     * @return true if the edge was added successfully, false if there's already an edge or two arcs.
+     */
     private boolean addEdgeHelper(E src, E dest, Double weight){
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
@@ -90,7 +130,12 @@ public class LuigiGraph<E> extends Graph<E>{
         return true;
     }
 
-    // Función auxiliar por si se necesita
+    /**
+     * Checks if there is an arc between two vertices.
+     * @param src the element in the source vertex of the edge
+     * @param dest the element in the destination vertex of the edge
+     * @return true if the arc exist, false otherwise
+     */
     private boolean arcExists(E src, E dest){
         Vertex srcV = this.vertexMap.get(src);
         for (Pair pair: srcV.neighbours){
@@ -101,6 +146,12 @@ public class LuigiGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Adds an unweighted arc from one vertex to another in the graph.
+     * @param src the element in the source vertex of the arc.
+     * @param dest the element in the destination vertex of the arc.
+     * @return true if the arc was added successfully, false if the arc already exists or any of the elements is null.
+     */
     @Override
     public boolean addArc(E src, E dest){
         if (this.isWeighted)
@@ -108,6 +159,13 @@ public class LuigiGraph<E> extends Graph<E>{
          return addArcHelper(src, dest, null);
     }
 
+    /**
+     * Adds a weighted arc from one vertex to another in the graph.
+     * @param src the element in the source vertex of the arc.
+     * @param dest the element in the destination vertex of the arc.
+     * @param weight the weight of the arc.
+     * @return true if the arc was added successfully, false if the arc already exists or any of the elements is null.
+     */
     @Override
     public boolean addArc(E src, E dest, double weight) {
         if (!this.isWeighted)
@@ -115,6 +173,13 @@ public class LuigiGraph<E> extends Graph<E>{
         return addArcHelper(src, dest, weight);
     }
 
+    /**
+     * Helps the function addArc to add any type of arc from one vertex to another in the graph.
+     * @param src the element in the source vertex of the arc.
+     * @param dest the element in the destination vertex of the arc.
+     * @param weight the weight of the arc, if the graph is unweighted the value is null.
+     * @return true if the arc was added successfully, false if the arc already exists.
+     */
     private boolean addArcHelper(E src, E dest, Double weight){
         Vertex srcV = vertexMap.get(src);
         Vertex destV = vertexMap.get(dest);
@@ -128,11 +193,22 @@ public class LuigiGraph<E> extends Graph<E>{
         return true;
     }
 
+    /**
+     * Gets the number of vertices in the graph.
+     * @return the number of vertices in the graph
+     */
     @Override
     public int vertexCount() {
         return vertexMap.size();
     }
 
+    /**
+     * Removes the specified vertex from the graph.
+     * If the vertex does not exist in the graph, returns false.
+     * Otherwise, all arcs and edges connected to the vertex are removed as well.
+     * @param vtx the vertex to be removed.
+     * @return true if the vertex was successfully removed, false otherwise.
+     */
     @Override
     public boolean removeVertex(E vtx) {
         if (vertexMap.get(vtx) == null)
@@ -145,6 +221,13 @@ public class LuigiGraph<E> extends Graph<E>{
         return true;
     }
 
+    /**
+     * Removes the specified arc from the graph.
+     * If the arc does not exist in the graph, returns false.
+     * @param src the source vertex of the arc to be removed.
+     * @param dest the destination vertex of the arc to be removed.
+     * @return true if the arc was successfully removed, false otherwise.
+     */
     @Override
     public boolean removeArc(E src, E dest) {
         if (src == null || dest == null)
@@ -154,11 +237,28 @@ public class LuigiGraph<E> extends Graph<E>{
         return srcV.neighbours.removeIf(pair -> pair.v.key.equals(dest));
     }
 
+    /**
+     * Removes the specified edge from the graph.
+     * If the edge does not exist in the graph, returns false.
+     * @param src the source vertex of the edge to be removed.
+     * @param dest the destination vertex of the edge to be removed.
+     * @return true if the edge was successfully removed, false otherwise.
+     */
     @Override
     public boolean removeEdge(E src, E dest) {
-        return removeArc(src, dest) || removeArc(dest, src);
+        if (arcExists(src, dest) && arcExists(dest, src))
+            return removeArc(src, dest) || removeArc(dest, src);
+        return false;
     }
 
+    /**
+     * Updates the weight of the specified arc.
+     * If the graph is not weighted, returns false.
+     * @param src the source vertex of the arc.
+     * @param dest the destination vertex of the arc.
+     * @param weight the new weight to be set.
+     * @return true if the weight of the arc was successfully updated, If the arc does not exist in the graph, returns false.
+     */
     @Override
     public boolean updateArc(E src, E dest, double weight) {
         if (!this.isWeighted)
@@ -177,6 +277,14 @@ public class LuigiGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Updates the weight of the specified edge.
+     * If the graph is not weighted, returns false.
+     * @param src the source vertex of the edge.
+     * @param dest the destination vertex of the edge.
+     * @param weight the new weight to be set.
+     * @return true if the weight of the edge was successfully updated, if the edge doesn't exist, returns false.
+     */
     @Override
     public boolean updateEdge(E src, E dest, double weight) {
         if (arcExists(src, dest) && arcExists(dest, src))
@@ -184,6 +292,13 @@ public class LuigiGraph<E> extends Graph<E>{
         return false;
     }
 
+    /**
+     * Get the weight of the arc between two vertices.
+     * If the graph is not weighted, returns null
+     * @param src the source vertex of the arc.
+     * @param dest the destination vertex of the arc.
+     * @return null if any of the elements is null or the arc doesn't exist.
+     */
     @Override
     public Double getArcWeight(E src, E dest) {
         if (src == null || dest == null)
@@ -197,6 +312,13 @@ public class LuigiGraph<E> extends Graph<E>{
         return null;
     }
 
+    /**
+     * Get the weight of the edge between two vertices.
+     * If the graph is not weighted, returns null
+     * @param src the source vertex of the arc.
+     * @param dest the destination vertex of the arc.
+     * @return null if any of the elements is null or the edge doesn't exist.
+     */
     @Override
     public Double getEdgeWeight(E src, E dest) {
         if (src == null || dest == null)
