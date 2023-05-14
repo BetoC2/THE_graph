@@ -296,20 +296,20 @@ public class MarioGraph<E> extends Graph<E>{
         stack.push(src);
         while (!stack.isEmpty()) {
             // Stack top vertex is visited
-            E curr = stack.pop();
-            System.out.print(curr + " ");
+            E current = stack.pop();
+            System.out.print(current + " -> ");
 
             // Every neigbor is added to stack
             if (this.isWeighted) { //When edges & arcs are represented by a weight
                 for (int i = 0; i < adjWeightMatrix.length; i++) {
-                    if (adjWeightMatrix[vertices.indexOf(curr)][i] != null && !visited[i]) {
+                    if (adjWeightMatrix[vertices.indexOf(current)][i] != null && !visited[i]) {
                         visited[i] = true;
                         stack.push(vertices.get(i));
                     }
                 }
             } else { //When edges & arcs are represented by a boolean
                 for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[vertices.indexOf(curr)][i] && !visited[i]) {
+                    if (adjBoolMatrix[vertices.indexOf(current)][i] && !visited[i]) {
                         visited[i] = true;
                         stack.push(vertices.get(i));
                     }
@@ -341,7 +341,7 @@ public class MarioGraph<E> extends Graph<E>{
 
         while(!queue.isEmpty()){
             int current = queue.poll();
-            System.out.print(vertices.get(current) + " ");
+            System.out.print(vertices.get(current) + " -> ");
 
             if(this.isWeighted){ //When edges & arcs are represented by a weight
                 for (int i = 0; i < adjWeightMatrix.length; i++) {

@@ -5,7 +5,7 @@ import java.util.function.DoubleFunction;
 
 public class TestGraph {
     public static void main(String[] args) throws NullObjectReceivedException, WrongGraphMethodException {
-        MarioGraph<Integer> intGraph = new MarioGraph<>(5,false);
+        LuigiGraph<Integer> intGraph = new LuigiGraph<>(false);
         System.out.println(intGraph.addVertex(15));  // returns true
         //System.out.println(intGraph.addVertex(15));  // returns false
         System.out.println(intGraph.addVertex(58));  // returns true
@@ -17,8 +17,8 @@ public class TestGraph {
         System.out.println(intGraph.addVertex(10));   // returns false*/
 
 
-        System.out.println(intGraph.addEdge(15, 58)); // return true
-        System.out.println(intGraph.addEdge ( 7, 15)); // return true
+        System.out.println(intGraph.addEdge(15, 7)); // return true
+        System.out.println(intGraph.addEdge ( 58, 15)); // return true
         System.out.println(intGraph.addArc ( 7, 58)); // return true
         /*System.out.println(intGraph.addEdge(15, 209)); // return true
         System.out.println(intGraph.addEdge(7, 15)); // return true
@@ -39,7 +39,7 @@ public class TestGraph {
         intG.addEdge(1,2,100);
         intG.addEdge(1,3,100);*/
 
-        intGraph.print();
+        //intGraph.print();
         intGraph.DFS(15);
         System.out.println("\n");
         intGraph.BFS(15);

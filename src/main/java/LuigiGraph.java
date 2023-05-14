@@ -407,17 +407,20 @@ public class LuigiGraph<E> extends Graph<E>{
      * If the graph is weighted, weight will be printed as well
      */
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder st = new StringBuilder();
-        st.append("Impresión de grafo:\n");
-        for(Vertex vertex: vertexMap.values()){
+        st.append("Lista de Adyacencia:\n");
+        for (Vertex vertex : vertexMap.values()) {
             st.append(vertex.key);
-            st.append("-> ");
-            for(Pair pair: vertex.neighbours){
+            st.append(" -> ");
+            for (Pair pair : vertex.neighbours) {
                 st.append(pair.v.key);
-                if (this.isWeighted) st.append(String.format(" (%.2f)",pair.weight));
+                if (this.isWeighted) {
+                    st.append(String.format(" (%.2f)", pair.weight));
+                }
                 st.append(", ");
             }
+            st.setLength(st.length() - 2);
             st.append("\n");
         }
         return st.toString();
