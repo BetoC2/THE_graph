@@ -33,7 +33,8 @@ public class MarioGraph<E> extends Graph<E>{
                 for(int j = 0; j < adjBoolMatrix.length; j++){
                     adjBoolMatrix[i][j] = false;
                 }
-            }//numVrx = Number of Vertex
+                adjBoolMatrix[i][i] = true;
+            }
         }
         if(isWeighted) {
             this.adjWeightMatrix = new Double[numVrx][numVrx]; //numVrx = Number of Vertex
