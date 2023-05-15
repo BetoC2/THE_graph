@@ -10,7 +10,7 @@ public class TestGraph {
         MarioGraph<String> strGraph = new MarioGraph<>(9,false);
         strGraph.addVertex("Yael");
         strGraph.addVertex("Beto");
-        strGraph.addVertex("Raul");
+        strGraph.addVertex("Yair");
         strGraph.addVertex("Juan");
         strGraph.addVertex("Nate");
         strGraph.addVertex("Saul");
@@ -31,14 +31,16 @@ public class TestGraph {
         strGraph.addEdge("Xime","Nate");
         strGraph.addEdge("Juan","Saul");
         strGraph.addEdge("Juan","Yael");
-        strGraph.addEdge("Saul","Raul");
+        strGraph.addEdge("Saul","Yair");
         strGraph.addEdge("Mary","Sara");
         strGraph.addEdge("Beto","Sara");
         strGraph.addEdge("Xime","Sara");
         strGraph.addEdge("Xime","Mary");
 
-        strGraph.removeArc("Raul","Saul");
-        strGraph.removeEdge("Mary","Sara");
+        //strGraph.removeArc("Yair","Saul");
+        //strGraph.removeEdge("Mary","Sara");
         System.out.println(strGraph.toString());
+        //strGraph.removeVertex("Sara");
+        //System.out.println(strGraph.toString());
     }
 }
