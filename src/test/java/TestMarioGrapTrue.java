@@ -24,7 +24,7 @@ public class TestMarioGrapTrue {
         strGraph.addArc(1,3,0.6);
 
         System.out.println(strGraph.toString());
-        //strGraph.DFS(1);
+        strGraph.DFS(4);
         //strGraph.BFS(1);
     }
 }
