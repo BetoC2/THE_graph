@@ -414,6 +414,10 @@ public class MarioGraph<E> extends Graph<E>{
      * @param src the source vertex key of the arc.
      */
     public void DFS(E src) {
+        if (!vertices.contains(src)) {
+            throw new IllegalArgumentException("El vértice no existe en el grafo.");
+        }
+        System.out.println("DFS");
         int srcIndex = vertices.indexOf(src);
         visited[srcIndex] = true;
         System.out.print(src + " ");
@@ -443,6 +447,10 @@ public class MarioGraph<E> extends Graph<E>{
      * @param src the source vertex key of the arc.
      */
     public void BFS(E src){
+        if (!vertices.contains(src)) {
+            throw new IllegalArgumentException("El vértice no existe en el grafo.");
+        }
+        System.out.println("BFS");
         int srcIndex = vertices.indexOf(src);
         visited = new boolean[visited.length];
         visited[srcIndex] = true;
