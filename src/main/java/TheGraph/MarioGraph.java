@@ -497,20 +497,21 @@ public class MarioGraph<E> extends Graph<E>{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        int size = vertices.size();
         if (super.isWeighted) {
             sb.append("  ");
             for (E vertex : vertices) {
                 sb.append(String.format(" %s   ", vertex.toString()));
             }
             sb.append("\n");
-            for (int i = 0; i < adjWeightMatrix.length; i++) {
+            for (int i = 0; i < size; i++) {
                 if (i < vertices.size()) {
                     sb.append(String.format("%s ", vertices.get(i)));
                 }
                 if (i > (vertices.size() - 1)) {
                     sb.append("  ");
                 }
-                for (int j = 0; j < adjWeightMatrix[i].length; j++) {
+                for (int j = 0; j < size; j++) {
                     if (adjWeightMatrix[i][j] != null) {
                         sb.append(String.format("%.1f  ", adjWeightMatrix[i][j]));
                     }
@@ -524,17 +525,17 @@ public class MarioGraph<E> extends Graph<E>{
         if (!super.isWeighted) {
             sb.append("     ");
             for (E vertex : vertices) {
-                sb.append(String.format("%s ", vertex.toString()));
+                sb.append(String.format("%s ", vertex));
             }
             sb.append("\n");
-            for (int i = 0; i < adjBoolMatrix.length; i++) {
+            for (int i = 0; i < size; i++) {
                 if (i < vertices.size()) {
                     sb.append(String.format("%s ", vertices.get(i)));
                 }
                 if (i > (vertices.size() - 1)) {
                     sb.append("      ");
                 }
-                for (int j = 0; j < adjBoolMatrix[i].length; j++) {
+                for (int j = 0; j < size; j++) {
                     if (adjBoolMatrix[i][j]) {
                         sb.append(" T   ");
                     }

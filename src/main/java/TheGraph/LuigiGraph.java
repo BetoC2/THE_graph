@@ -248,7 +248,7 @@ public class LuigiGraph<E> extends Graph<E>{
     @Override
     public boolean removeEdge(E src, E dest) {
         if (arcExists(src, dest) && arcExists(dest, src))
-            return removeArc(src, dest) || removeArc(dest, src);
+            return removeArc(src, dest) && removeArc(dest, src);
         return false;
     }
 

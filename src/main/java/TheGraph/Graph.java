@@ -123,4 +123,11 @@ public abstract class Graph<E> {
      * @return the weight of the edge.
      */
     public abstract Double  getEdgeWeight(E src, E dest);
+
+    @Override
+    public String toString() {
+        return "Graph{" +
+                "isWeighted=" + isWeighted +
+                '}';
+    }
 }
