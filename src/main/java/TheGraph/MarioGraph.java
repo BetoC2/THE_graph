@@ -221,7 +221,7 @@ public class MarioGraph<E> extends Graph<E>{
             matrix[i][length-1] = null;
         }
         for(int i = 0; i < length; i++){
-            matrix[length][i] = null;
+            matrix[length-1][i] = null;
         }
     }
 
