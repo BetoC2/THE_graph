@@ -438,7 +438,7 @@ public class MarioGraph<E> extends Graph<E>{
                 }
             } else {
                 for (int i = 0; i < adjBoolMatrix.length; i++) {
-                    if (adjBoolMatrix[vertices.indexOf(current)][i] == true && !visited[i]) {
+                    if (adjBoolMatrix[vertices.indexOf(current)][i] && !visited[i]) {
                         visited[i] = true;
                         stack.push(vertices.get(i));
                     }
