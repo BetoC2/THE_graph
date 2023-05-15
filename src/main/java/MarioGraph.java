@@ -2,6 +2,8 @@ import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
+
 /**
  * Class implementing a graph with adjacency matrix.
  * @param <E> the type of the elements stored in the vertices of the graph
@@ -418,22 +420,28 @@ public class MarioGraph<E> extends Graph<E>{
             throw new IllegalArgumentException("El vértice no existe en el grafo.");
         }
         System.out.println("DFS");
+        Stack<E> stack = new Stack<>();
         int srcIndex = vertices.indexOf(src);
         visited[srcIndex] = true;
-        System.out.print(src + " ");
+        stack.push(src);
 
-        if(this.isWeighted){
-            for (int i = 0; i < adjWeightMatrix.length; i++) {
-                if (adjWeightMatrix[srcIndex][i] != null && !visited[i]) {
-                    DFS(vertices.get(i));
+        while (!stack.isEmpty()) {
+            E current = stack.pop();
+            System.out.print(current + " ");
+
+            if (this.isWeighted) {
+                for (int i = 0; i < adjWeightMatrix.length; i++) {
+                    if (adjWeightMatrix[vertices.indexOf(current)][i] != null && !visited[i]) {
+                        visited[i] = true;
+                        stack.push(vertices.get(i));
+                    }
                 }
-            }
-        }
-
-        else{
-            for (int i = 0; i < adjBoolMatrix.length; i++) {
-                if (adjBoolMatrix[srcIndex][i] == true && !visited[i]) {
-                    DFS(vertices.get(i));
+            } else {
+                for (int i = 0; i < adjBoolMatrix.length; i++) {
+                    if (adjBoolMatrix[vertices.indexOf(current)][i] == true && !visited[i]) {
+                        visited[i] = true;
+                        stack.push(vertices.get(i));
+                    }
                 }
             }
         }
