@@ -478,43 +478,56 @@ public class MarioGraph<E> extends Graph<E>{
      * If the graph is weighted, weight will be printed as well
      */
     @Override
-    public String toString(){
-        print();
-        return super.toString();
-    }
-
-    public void print(){
-        if(super.isWeighted){
-            System.out.print("  ");
-            for(E vertex : vertices){
-                System.out.printf(" %s   ",vertex.toString());
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (super.isWeighted) {
+            sb.append("  ");
+            for (E vertex : vertices) {
+                sb.append(String.format(" %s   ", vertex.toString()));
             }
-            System.out.println();
-            for(int i = 0; i < adjWeightMatrix.length; i++){
-                if(i < (vertices.size())) System.out.printf("%s ",vertices.get(i));
-                if(i > (vertices.size()-1)) System.out.print("  ");
-                for(int j = 0; j < adjWeightMatrix[i].length; j++){
-                    if(adjWeightMatrix[i][j] != null) System.out.printf("%.1f  ",adjWeightMatrix[i][j]);
-                    if(adjWeightMatrix[i][j] == null) System.out.print("null ");
+            sb.append("\n");
+            for (int i = 0; i < adjWeightMatrix.length; i++) {
+                if (i < vertices.size()) {
+                    sb.append(String.format("%s ", vertices.get(i)));
                 }
-                System.out.println();
+                if (i > (vertices.size() - 1)) {
+                    sb.append("  ");
+                }
+                for (int j = 0; j < adjWeightMatrix[i].length; j++) {
+                    if (adjWeightMatrix[i][j] != null) {
+                        sb.append(String.format("%.1f  ", adjWeightMatrix[i][j]));
+                    }
+                    if (adjWeightMatrix[i][j] == null) {
+                        sb.append("null ");
+                    }
+                }
+                sb.append("\n");
             }
         }
-        if(!super.isWeighted){
-            System.out.print("  ");
-            for(E vertex : vertices){
-                System.out.printf("%s ",vertex.toString());
+        if (!super.isWeighted) {
+            sb.append("     ");
+            for (E vertex : vertices) {
+                sb.append(String.format("%s ", vertex.toString()));
             }
-            System.out.println();
-            for(int i = 0; i < adjBoolMatrix.length; i++){
-                if(i < (vertices.size())) System.out.printf("%s ",vertices.get(i));
-                if(i > (vertices.size()-1)) System.out.print("  ");
-                for(int j = 0; j < adjBoolMatrix[i].length; j++){
-                    if(adjBoolMatrix[i][j]) System.out.print("T ");
-                    if(!adjBoolMatrix[i][j]) System.out.print("F ");
+            sb.append("\n");
+            for (int i = 0; i < adjBoolMatrix.length; i++) {
+                if (i < vertices.size()) {
+                    sb.append(String.format("%s ", vertices.get(i)));
                 }
-                System.out.println();
+                if (i > (vertices.size() - 1)) {
+                    sb.append("      ");
+                }
+                for (int j = 0; j < adjBoolMatrix[i].length; j++) {
+                    if (adjBoolMatrix[i][j]) {
+                        sb.append(" T   ");
+                    }
+                    if (!adjBoolMatrix[i][j]) {
+                        sb.append(" F   ");
+                    }
+                }
+                sb.append("\n");
             }
         }
+        return sb.toString();
     }
 }
