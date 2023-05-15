@@ -1,3 +1,4 @@
+package TheGraph;
 import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
 
@@ -15,7 +16,7 @@ public abstract class Graph<E> {
      * Constructs a new Graph that can be weighted or unweighted
      * @param isWeighted indicates whether the graph is weighted or not.
      */
-    Graph(boolean isWeighted) {
+    public Graph(boolean isWeighted) {
         this.isWeighted = isWeighted;
     }
 

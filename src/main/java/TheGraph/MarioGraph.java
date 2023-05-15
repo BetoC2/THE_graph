@@ -1,3 +1,4 @@
+package TheGraph;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ public class MarioGraph<E> extends Graph<E>{
      * @param numVrx a int value indicating the number of vertices the Matrix will have
      * @param isWeighted a boolean value indicating whether the graph is weighted or not
      */
-    MarioGraph(int numVrx,boolean isWeighted){
+    public MarioGraph(int numVrx,boolean isWeighted){
         super(isWeighted);
         if (!isWeighted) {
             this.adjBoolMatrix = new Boolean[numVrx][numVrx];

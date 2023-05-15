@@ -1,3 +1,4 @@
+package TheGraph;
 import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
 
@@ -16,7 +17,7 @@ public class LuigiGraph<E> extends Graph<E>{
      * Constructor for LuigiGraph class.
      * @param isWeighted a boolean value indicating whether the graph is weighted or not
      */
-    LuigiGraph(boolean isWeighted) {
+    public LuigiGraph(boolean isWeighted) {
         super(isWeighted);
         this.vertexMap = new HashMap<>();
     }

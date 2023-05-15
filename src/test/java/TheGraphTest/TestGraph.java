@@ -1,5 +1,7 @@
+package TheGraphTest;
 import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
+import TheGraph.*;
 
 import java.util.function.DoubleFunction;
 

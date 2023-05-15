@@ -1,9 +1,11 @@
+package TheGraphTest;
 import exceptions.NullObjectReceivedException;
 import exceptions.WrongGraphMethodException;
+import TheGraph.*;
 
-public class TestMarioGrapTrue {
-    public static void main(String[] args) throws NullObjectReceivedException, WrongGraphMethodException {
-        MarioGraph<Integer> strGraph = new MarioGraph<>(5,true);
+public class TestLuigiGraph {
+    public static void main(String[] args)throws NullObjectReceivedException, WrongGraphMethodException {
+        LuigiGraph<Integer> strGraph = new LuigiGraph<>(true);
         strGraph.addVertex(1);
         strGraph.addVertex(2);
         strGraph.addVertex(3);
@@ -25,6 +27,6 @@ public class TestMarioGrapTrue {
 
         System.out.println(strGraph.toString());
         strGraph.DFS(4);
-        //strGraph.BFS(1);
+        strGraph.BFS(4);
     }
 }
